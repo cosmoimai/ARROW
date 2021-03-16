@@ -1,98 +1,117 @@
 <h1>
-    Details:
+  Details:
 </h1>
-
 <div class="flex">
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="media d-flex">
-                                    <div class="media-body text-left">
-                                        <h3 class="success">{{user.displayName}}</h3>
-                                        <span>{{user.role}}</span>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <img src={{user.image}} class="float-right">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="media d-flex">
-                                    <div class="media-body text-left">
-                                        <h3 class="success">{{pdp}}</h3>
-                                        <span>{{pdn}}</span>
-                                    </div>
-                                </div>
-                                <div class="progress mt-1 mb-0" style="height: 7px;">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{pdp}}" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <div class="media-body mt-1 mb-0 text-left" onclick="on()">
-                                        <span>{{createdAt}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <div class="col-xl-3 col-sm-6 col-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-body">
+          <div class="media d-flex">
+            <div class="media-body text-left">
+              <h3 class="success">
+                {{user.displayName}}
+              </h3>
+              <span>
+                {{user.role}}
+              </span>
+            </div>
+            <div class="align-self-center">
+              <img src={{user.image}} class="float-right" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 col-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-body">
+          <div class="media d-flex">
+            <div class="media-body text-left">
+              <h3 class="success">
+                {{pdp}}
+              </h3>
+              <span>
+                {{pdn}}
+              </span>
+            </div>
+          </div>
+          <div class="progress mt-1 mb-0" style="height: 7px;">
+            <div
+              class="progress-bar bg-success"
+              role="progressbar"
+              style="width: {{pdp}}"
+              aria-valuenow="50"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+          <div class="media-body mt-1 mb-0 text-left" onclick="on()">
+            <span>
+              {{createdAt}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-
 <h1>
-    Symptoms:
+  Symptoms:
 </h1>
-
-
-
 <div class="flex">
-    {{#each symptoms}}
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="media d-flex">
-                                    <div class="media-body text-left">
-                                        <h3>{{this}}</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    {{/each}}
+  {{#each symptoms}}
+    <div class="col-xl-3 col-sm-6 col-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <div class="media d-flex">
+              <div class="media-body text-left">
+                <h3>
+                  {{this}}
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/each}}
 </div>
-
 <h1>
-    Diseases:
+  Diseases:
 </h1>
-
 <div class="flex">
-    {{#each diseases}}
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="media d-flex">
-                                    <div class="media-body text-left">
-                                        <h3 class="success">{{this.percs}}</h3>
-                                        <span>{{this.name}}</span>
-                                    </div>
-                                    <div class="align-self-center">
-                                    </div>
-                                </div>
-                                <div class="progress mt-1 mb-0" style="height: 7px;">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{this.percs}}" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    {{/each}}
+  {{#each diseases}}
+    <div class="col-xl-3 col-sm-6 col-12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-body">
+            <div class="media d-flex">
+              <div class="media-body text-left">
+                <h3 class="success">
+                  {{this.percs}}
+                </h3>
+                <span>
+                  {{this.name}}
+                </span>
+              </div>
+              <div class="align-self-center"></div>
+            </div>
+            <div class="progress mt-1 mb-0" style="height: 7px;">
+              <div
+                class="progress-bar bg-success"
+                role="progressbar"
+                style="width: {{this.percs}}"
+                aria-valuenow="50"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/each}}
 </div>
-
