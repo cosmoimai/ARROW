@@ -1,8 +1,23 @@
-<nav>
-    <div>
-        <ul>
+{{!-- <nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Logo</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/dashboard">Dashboard</a></li>
             <li><a href="/auth/logout">Logout</a></li>
+            <li><a href="/form">Form</a></li>
         </ul>
     </div>
 </nav>
+--}}
+
+
+
+<div id="mySidenav" class="sidenav">
+    <a href="/dashboard" class="active">Dashboard</a></li>
+    <a href="/auth/logout">Logout</a>
+    <a href="/form">Form</a>
+</div>
+
+<div id="main">
+    <span class="openbtn" style="font-size:30px;cursor:pointer" onclick="toggleNav()">&#9776; Navigate</span>
+</div>

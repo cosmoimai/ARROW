@@ -1,0 +1,29 @@
+<form action="form" method="post">
+    <select name=symptoms multiple="" class="ui fluid dropdown">
+        <option value="">Roles</option>
+        {{#each data}}
+        <option value={{@index}}>{{this}}</option>
+        {{/each}}
+    </select>
+    <button type="submit" value="Submit">Submit </button>
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.js"></script>
+
+
+{{!--
+<script>
+    $('#multi-select')
+        .dropdown()
+        ;
+</script> --}}
+
+
+
+<script>
+
+    $(".ui.fluid.dropdown").dropdown({ allowLabels: true })
+
+
+</script>
