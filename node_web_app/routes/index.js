@@ -136,6 +136,10 @@ router.get('/dashboard', ensureAuth, async (req, res) => {
     // res.render('dashboard', req.user)
 })
 
+router.get('/role', (req, res) => {
+    res.render('role')
+})
+
 router.get('/form', (req, res) => {
     res.render('form', {data: symptoms_array})
 })
