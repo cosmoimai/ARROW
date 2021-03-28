@@ -1,12 +1,19 @@
-<form action="role" method="POST">
-  <input type="radio" id="doctor" name="role" value="doctor" />
+<form action="role" method="POST" class="role-select">
+  <div>
+    <span>
+      Please choose your role:
+    </span>
+  </div>
+
+  <input class="rb" type="radio" id="doctor" name="role" value="doctor" />
   <label for="doctor">
     Doctor
   </label>
-  <br />
-  <input type="radio" id="patient" name="role" value="patient" />
+  <div></div>
+  <input class="rb" type="radio" id="patient" name="role" value="patient" />
   <label for="patient">
     Patient
   </label>
+  <div></div>
   <input type="submit" />
 </form>
