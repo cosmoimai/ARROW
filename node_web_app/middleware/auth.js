@@ -21,4 +21,15 @@ module.exports = {
       return next();
     }
   },
+  ensureRoleNotChosen: (req, res, next) => {
+    if (req.isAuthenticated()) {
+      if (req.user.role !== undefined) {
+        res.redirect("/");
+        return;
+      }
+      return next();
+    } else {
+      res.redirect("/");
+    }
+  }
 };
