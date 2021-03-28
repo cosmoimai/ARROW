@@ -15,50 +15,53 @@
             <img src={{profile.image}} class="float-right" />
           </div>
         </div>
+        <div class="progress mt-1 mb-0" style="height: 7px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="50"
+            aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="media-body mt-1 mb-0 text-left" onclick="on()">
+          <span>
+            {{profile.email}}
+          </span>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <div class="flex">
   {{#each results}}
-    <div class="col-xl-3 col-sm-6 col-12">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-body">
-            <div class="media d-flex">
-              <div class="media-body text-left">
-                <h3 class="success">
-                  {{this.mainpercentage}}
-                </h3>
-                <span>
-                  {{this.maindisease}}
-                </span>
-              </div>
-              <div class="align-self-center">
-                <a href="/result/{{this.resultId}}" class="float-right medium">
-                  View Details
-                </a>
-              </div>
-            </div>
-            <div class="progress mt-1 mb-0" style="height: 7px;">
-              <div
-                class="progress-bar bg-success"
-                role="progressbar"
-                style="width: {{this.mainpercentage}}"
-                aria-valuenow="50"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-            <div class="media-body mt-1 mb-0 text-left" onclick="on()">
+  <div class="col-xl-3 col-sm-6 col-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-body">
+          <div class="media d-flex">
+            <div class="media-body text-left">
+              <h3 class="success">
+                {{this.mainpercentage}}
+              </h3>
               <span>
-                {{this.createdAt}}
+                {{this.maindisease}}
               </span>
             </div>
+            <div class="align-self-center">
+              <a href="/result/{{this.resultId}}" class="float-right medium">
+                View Details
+              </a>
+            </div>
+          </div>
+          <div class="progress mt-1 mb-0" style="height: 7px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{this.mainpercentage}}"
+              aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <div class="media-body mt-1 mb-0 text-left">
+            <span>
+              {{this.createdAt}}
+            </span>
           </div>
         </div>
       </div>
     </div>
+  </div>
   {{/each}}
 </div>
 <script>
