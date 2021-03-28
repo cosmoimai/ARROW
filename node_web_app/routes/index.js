@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuth, ensureGuest } = require("../middleware/auth");
+const { ensureAuth, ensureGuest, ensureRoleNotChosen } = require("../middleware/auth");
 const User = require("../models/User");
 var spawn = require("child_process").spawn;
 const http = require("http");
@@ -219,6 +219,7 @@ router.get("/", ensureGuest, (req, res) => {
 });
 
 router.get("/dashboard", ensureAuth, async (req, res) => {
+  console.log(req.user)
   let allResults = await Result.find({ googleId: req.user.googleId })
     .lean()
     .then((results) => {
@@ -227,6 +228,7 @@ router.get("/dashboard", ensureAuth, async (req, res) => {
         image: req.user.image,
         googleId: req.user.googleId,
         role: req.user.role,
+        email: req.user.email
       };
       var options = {
         weekday: "long",
@@ -254,7 +256,7 @@ router.get("/dashboard", ensureAuth, async (req, res) => {
     .catch((error) => res.json({ error: error.message }));
 });
 
-router.get("/role", (req, res) => {
+router.get("/role", ensureRoleNotChosen, (req, res) => {
   res.render("role");
 });
 
@@ -288,7 +290,7 @@ router.post("/form", async (req, res) => {
           diseases: resA,
           predictionMain: [
             diseases_array[maxind],
-            (resA[maxind] * 100).toString() + "%",
+            (resA[maxind] * 100).toFixed(2).toString() + "%",
           ],
         });
         res.redirect(`/result/${result._id}`);
@@ -298,7 +300,7 @@ router.post("/form", async (req, res) => {
     });
 });
 
-router.post("/role", async (req, res) => {
+router.post("/role", ensureRoleNotChosen, async (req, res) => {
   console.log(req.body.role);
   try {
     var query = { googleId: req.user.googleId };

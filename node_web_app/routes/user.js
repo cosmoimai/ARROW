@@ -9,10 +9,13 @@ const superagent = require("superagent");
 const mongoose = require("mongoose");
 const Result = require("../models/Result");
 
-router.get("/", (req, res) => {
-  let all = User.find({}, (err, users) => {
-    res.send(users);
-  });
+router.get("/patient", (req, res) => {
+  let all = User.find({role : "patient"})
+  .lean()
+  .then((users) => {
+    res.render('user', {role: "Patients", users: users.reverse()})
+  })
+  .catch((error) => res.json({ error: error.message }));
 });
 
 router.get("/:gid", async (req, res) => {
