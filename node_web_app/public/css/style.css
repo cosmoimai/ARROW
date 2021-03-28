@@ -2,6 +2,25 @@ body {
   font-family: "Lato", sans-serif;
 }
 
+a{
+  text-decoration: none;
+  color : black;
+}
+
+.role-select {
+  font-size: x-large;
+  margin: 1em;
+  padding: 1em;
+}
+
+.role-select div {
+  margin: 0.5em;
+}
+
+.rb {
+  size: 3em;
+}
+
 .sidenav {
   height: 100%;
   width: 0;
@@ -117,6 +136,11 @@ body {
 .success {
   color: rgb(44, 141, 160) !important;
   font-size: xx-large;
+}
+
+.email {
+  color: rgb(44, 141, 160) !important;
+  font-size: large;
 }
 
 h1 {
