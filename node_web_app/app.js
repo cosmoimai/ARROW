@@ -10,7 +10,6 @@ const connectDB = require("./config/db");
 
 dotenv.config({ path: "./config/config.env" });
 
-
 require("./config/passport")(passport);
 
 connectDB();
@@ -51,9 +50,9 @@ app.use(passport.session());
 
 app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
-app.use("/result", require("./routes/result"))
-app.use("/user", require("./routes/user"))
-app.use("/prescription", require("./routes/prescription"))
+app.use("/result", require("./routes/result"));
+app.use("/user", require("./routes/user"));
+app.use("/prescription", require("./routes/prescription"));
 
 const PORT = process.env.PORT || 3000;
 

@@ -200,53 +200,52 @@ function sortFunction(a, b) {
 router.get("/:id", async (req, res) => {
   console.log(req.params.id);
   var objectId = mongoose.Types.ObjectId(req.params.id);
-    Result.findById(objectId, async (err, mres) => {
-      fin = Array();
-      for (var i = 0; i < diseases_array.length; i++) {
-        mres.diseases[i] = {
-          name: diseases_array[i],
-          percn: mres.diseases[i],
-          percs: (mres.diseases[i] * 100).toFixed(2).toString() + "%",
-        };
-      }
-      for (var i = 0; i < mres.symptoms.length; i++) {
-        mres.symptoms[i] = symptoms_array[mres.symptoms[i]];
-      }
-      mres.diseases.sort(sortFunction);
-  
-      
-      let user = await User.findOne({ googleId: mres.googleId })
+  Result.findById(objectId, async (err, mres) => {
+    fin = Array();
+    for (var i = 0; i < diseases_array.length; i++) {
+      mres.diseases[i] = {
+        name: diseases_array[i],
+        percn: mres.diseases[i],
+        percs: (mres.diseases[i] * 100).toFixed(2).toString() + "%",
+      };
+    }
+    for (var i = 0; i < mres.symptoms.length; i++) {
+      mres.symptoms[i] = symptoms_array[mres.symptoms[i]];
+    }
+    mres.diseases.sort(sortFunction);
+
+    let user = await User.findOne({ googleId: mres.googleId })
       .lean()
       .then(async (user) => {
-      let pro = {
-        displayName: user.displayName,
-        image: user.image,
-        role: user.role.toUpperCase(),
-        email: user.email
-      };
-      console.log(user);
-      boolIsDoctor = false;
-      if (req.user.role==="doctor"){
-        boolIsDoctor = true
-      }
+        let pro = {
+          displayName: user.displayName,
+          image: user.image,
+          role: user.role.toUpperCase(),
+          email: user.email,
+        };
+        console.log(user);
+        boolIsDoctor = false;
+        if (req.user.role === "doctor") {
+          boolIsDoctor = true;
+        }
 
-      let queryPres = await Prescription.find({ resultId: req.params.id })
-      .lean()
-      .then(async (prescriptions) => {
-        res.render("result", {
-          resultId: req.params.id,
-          diseases: mres.diseases,
-          symptoms: mres.symptoms,
-          createdAt: mres.createdAt,
-          user: pro,
-          pdn: mres.predictionMain[0],
-          pdp: mres.predictionMain[1],
-          prescriptions: prescriptions.reverse(),
-          doctor: boolIsDoctor
-        });
-      })
-    });
-  })
+        let queryPres = await Prescription.find({ resultId: req.params.id })
+          .lean()
+          .then(async (prescriptions) => {
+            res.render("result", {
+              resultId: req.params.id,
+              diseases: mres.diseases,
+              symptoms: mres.symptoms,
+              createdAt: mres.createdAt,
+              user: pro,
+              pdn: mres.predictionMain[0],
+              pdp: mres.predictionMain[1],
+              prescriptions: prescriptions.reverse(),
+              doctor: boolIsDoctor,
+            });
+          });
+      });
+  });
 });
 
 module.exports = router;

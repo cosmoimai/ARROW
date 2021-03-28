@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuth, ensureGuest, ensureRoleNotChosen } = require("../middleware/auth");
+const {
+  ensureAuth,
+  ensureGuest,
+  ensureRoleNotChosen,
+} = require("../middleware/auth");
 const User = require("../models/User");
 var spawn = require("child_process").spawn;
 const http = require("http");
@@ -8,6 +12,7 @@ const io = require("../app.js");
 const superagent = require("superagent");
 const mongoose = require("mongoose");
 const Result = require("../models/Result");
+const Prescription = require("../models/Prescription");
 
 function sortFunction(a, b) {
   if (a[1] === b[1]) {
@@ -219,41 +224,62 @@ router.get("/", ensureGuest, (req, res) => {
 });
 
 router.get("/dashboard", ensureAuth, async (req, res) => {
-  console.log(req.user)
-  let allResults = await Result.find({ googleId: req.user.googleId })
-    .lean()
-    .then((results) => {
-      let suser = {
-        displayName: req.user.displayName,
-        image: req.user.image,
-        googleId: req.user.googleId,
-        role: req.user.role,
-        email: req.user.email
-      };
-      var options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-      };
+  console.log(req.user);
+  let allResults = await Result.find({ googleId: req.user.googleId });
 
-      for (var i = 0; i < results.length; i++) {
-        results[i] = {
-          resultId: results[i]._id,
-          maindisease: results[i].predictionMain[0],
-          mainpercentage: results[i].predictionMain[1],
-          createdAt: results[i].createdAt.toLocaleDateString("en-US", options),
+  if (req.user.role === "patient") {
+    let allResults = await Result.find({ googleId: req.user.googleId })
+      .lean()
+      .then((results) => {
+        let suser = {
+          displayName: req.user.displayName,
+          image: req.user.image,
+          googleId: req.user.googleId,
+          role: req.user.role,
+          email: req.user.email,
         };
-      }
-
-      console.log(results);
-
-      res.render("dashboard", { profile: suser, results: results.reverse() });
-    })
-    .catch((error) => res.json({ error: error.message }));
+        var options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+        };
+        for (var i = 0; i < results.length; i++) {
+          results[i] = {
+            resultId: results[i]._id,
+            maindisease: results[i].predictionMain[0],
+            mainpercentage: results[i].predictionMain[1],
+            createdAt: results[i].createdAt.toLocaleDateString(
+              "en-US",
+              options
+            ),
+          };
+        }
+        console.log(results);
+        res.render("dashboard", { profile: suser, results: results.reverse() });
+      })
+      .catch((error) => res.json({ error: error.message }));
+  } else {
+    let allPres = await Prescription.find({ googleId: req.user.googleId })
+      .lean()
+      .then((prescriptions) => {
+        let suser = {
+          displayName: req.user.displayName,
+          image: req.user.image,
+          googleId: req.user.googleId,
+          role: req.user.role,
+          email: req.user.email,
+        };
+        res.render("doctor", {
+          profile: suser,
+          prescriptions: prescriptions.reverse(),
+        });
+      })
+      .catch((error) => res.json({ error: error.message }));
+  }
 });
 
 router.get("/role", ensureRoleNotChosen, (req, res) => {
