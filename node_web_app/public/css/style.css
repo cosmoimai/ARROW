@@ -156,3 +156,50 @@ select {
   font-size: large;
 }
 
+.block-scroll {
+  height: 45%;
+  overflow-y: scroll;
+}
+
+
+.w-50 {
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  height: 100%;
+  overflow-x: scroll;
+}
+
+.pres {
+  align-items: center;
+  margin: 1em;
+  padding: 1em;
+  background-color: rgb(241, 248, 246);
+}
+
+.ui {
+  width: 40% !important;
+  margin: 1em;
+}
+
+textarea {
+  font-size: x-large !important;
+  width: 100% !important;
+  height: 7em !important;
+  color: black;
+}
+
+.ui.form .disabled.field, .ui.form .disabled.fields .field, .ui.form .field :disabled {
+  pointer-events: none;
+  opacity: 1;
+}
+
+textarea :disabled{
+  color: black;
+  opacity: 1 !important;
+}
+
+.btn{
+  font-size: x-large;
+  border: 1px solid black;
+  margin: 0.5em;
+} 

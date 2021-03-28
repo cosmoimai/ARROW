@@ -11,13 +11,18 @@
               <h3 class="success">
                 {{user.displayName}}
               </h3>
-              <span>
+              <span class="up">
                 {{user.role}}
               </span>
             </div>
             <div class="align-self-center">
               <img src={{user.image}} class="float-right" />
             </div>
+          </div>
+          <div class="media-body mt-1 mb-0 text-left" onclick="on()">
+            <span>
+              {{user.email}}
+            </span>
           </div>
         </div>
       </div>
@@ -82,7 +87,7 @@
 <h1>
   Diseases:
 </h1>
-<div class="flex">
+<div class="flex  block-scroll">
   {{#each diseases}}
     <div class="col-xl-3 col-sm-6 col-12">
       <div class="card">
@@ -115,3 +120,60 @@
     </div>
   {{/each}}
 </div>
+  <h1>
+    Prescriptions:
+  </h1>
+
+{{#if doctor}}
+  <form action="/prescription/{{resultId}}" method="post" class="role-select">
+    <div class="ui form">
+      <div class="field">
+        <div class="flex">
+            <textarea name="prescription"></textarea>
+            <input type="submit" class="btn" />
+        </div>
+      </div>
+    </div>
+     </form>
+
+{{/if}}
+  {{! <div class="flex"> }}
+    <div class="block-scroll">
+  {{#each prescriptions}}
+    <div class="flex pres">
+      <a href="/user/{{this.googleId}}" class="col-xl-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="media d-flex">
+                <div class="media-body text-left">
+                  <h3 class="success">
+                    {{this.user.displayName}}
+                  </h3>
+                  <span>
+                    {{this.user.email}}
+                  </span>
+                </div>
+                <div class="align-self-center">
+                  <img src={{this.user.image}} class="float-right" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      {{!-- <textarea name="prescription">{{this.prescription}}</textarea> --}}
+      {{! <div class="w-50"> }}
+      {{! <div class="card"> }}
+      <div class="ui form">
+        <div class="field">
+          <textarea name="prescription" readonly>{{this.prescription}}</textarea>
+        </div>
+      </div>
+      <div>
+        <span>{{this.createdAt}}</span>
+      </div>
+       </div>
+  {{/each}}
+  </div>
+  </div>
