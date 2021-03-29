@@ -1,15 +1,60 @@
+{{!-- <div class="side-2">
+  <a href="/user/{{profile.googleId}}" class="profile">
+  <div class="result-card">
+    <div class="image">
+      <img
+        src="{{profile.image}}"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="profile-description">
+      <div class="name">
+        {{profile.displayName}}
+      </div>
+      <div class="role">
+        {{profile.role}}
+      </div>
+    </div>
+  </div>
+  <div class="email result-card">
+    {{profile.email}}
+  </div>
+</a>
+  <div class="navigation">
+    {{#if auth}}
+    <a class="result-card" href="/dashboard" class="active">Dashboard</a></li>
+    {{/if}}
+    {{#if doctor}}
+    <a class="result-card" href="/user/patient">Patients</a>
+    {{/if}}
+    {{#if patient}}
+    <a class="result-card" href="/user/doctor">Doctors</a>
+    {{/if}}
+    {{#if notDoctor}}
+    <a class="result-card" href="/form">Form</a>
+    {{/if}}
+    {{#if auth}}
+    <a class="result-card" href="/auth/logout">Logout</a>
+    {{else}}
+    <a class="result-card" href="/auth/google">Enter</a>
+    {{/if}}
+  </div>
+</div> --}}
+
+<div class="main-1">
 <form action="form" method="post">
-    <select name=symptoms multiple="" class="ui fluid dropdown full">
-        <option value="">Roles</option>
+    <select name="symptoms" class="ui fluid search dropdown" multiple="">
+        <option class="temp" value="">Symptoms</option>
         {{#each data}}
         <option value={{@index}}>{{this}}</option>
         {{/each}}
     </select>
-    <button type="submit" class="btn" value="Submit">Submit </button>
+    <button  class="result-card" type="submit" class = "btn" value="Submit">Submit </button>
 </form>
+</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.js"></script>
+
 <script>
-    $(".ui.fluid.dropdown").dropdown({ allowLabels: true })
+  document.getElementById("form").classList.add("active-field");
 </script>

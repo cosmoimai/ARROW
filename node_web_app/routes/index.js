@@ -254,6 +254,7 @@ router.get("/dashboard", ensureAuth, async (req, res) => {
           }
           console.log(results);
           res.render("dashboard", {
+            layout : 'two.hbs',
             profile: suser,
             results: results.reverse(),
             auth: req.isAuthenticated(),
@@ -275,6 +276,7 @@ router.get("/dashboard", ensureAuth, async (req, res) => {
             email: req.user.email,
           };
           res.render("doctor", {
+            layout : 'two.hbs',
             profile: suser,
             prescriptions: prescriptions.reverse(),
             auth: req.isAuthenticated(),
@@ -319,6 +321,7 @@ router.get("/form", ensureNotDoctor, (req, res) => {
     }
 
     res.render("form", {
+      layout: 'form.hbs',
       profile: loggedInProfile,
       data: symptoms_array,
       auth: req.isAuthenticated(),
@@ -422,7 +425,7 @@ router.post("/role", ensureRoleNotChosen, async (req, res) => {
 
     res.redirect("/");
   } catch (error) {
-    console.log(error);
+    res.send(error);
   }
 });
 

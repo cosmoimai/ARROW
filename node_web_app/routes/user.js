@@ -28,6 +28,7 @@ router.get("/patient", ensureDoctor, (req, res) => {
           image: req.user.image,
         }
         res.render("user", {
+          layout: 'two.hbs',
           profile: loggedInProfile,
           role: "Patients",
           users: users.reverse(),
@@ -56,6 +57,7 @@ router.get("/doctor", ensurePatient, (req, res) => {
           image: req.user.image,
         }
         res.render("user", {
+          layout: 'two.hbs',
           profile: loggedInProfile,
           role: "Doctors",
           users: users.reverse(),

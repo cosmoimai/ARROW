@@ -1,0 +1,21 @@
+
+  <div class="navigation-form">
+    {{#if auth}}
+    <a class="result-card" id="dashboard" href="/dashboard">Dashboard</a>
+    {{/if}}
+    {{#if doctor}}
+    <a class="result-card"id="patients" href="/user/patient">Patients</a>
+    {{/if}}
+    {{#if patient}}
+    <a class="result-card"id="doctors" href="/user/doctor">Doctors</a>
+    {{/if}}
+    {{#if notDoctor}}
+    <a class="result-card"id="form" href="/form">Form</a>
+    {{/if}}
+    {{#if auth}}
+    <a class="result-card"id="logout" href="/auth/logout">Logout</a>
+    {{else}}
+    <a class="result-card"id="enter" href="/auth/google">Enter</a>
+    {{/if}}
+  </div>
+</div>
