@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuth, ensureGuest, ensureRoleNotChosen, ensureNotDoctor } = require("../middleware/auth");
+const {
+  ensureAuth,
+  ensureGuest,
+  ensureRoleNotChosen,
+  ensureNotDoctor,
+} = require("../middleware/auth");
 const User = require("../models/User");
 var spawn = require("child_process").spawn;
 const http = require("http");
@@ -17,25 +22,20 @@ function sortFunction(a, b) {
     return a.percn > b.percn ? -1 : 1;
   }
 }
-
 function indexOfMax(arr) {
   if (arr.length === 0) {
     return -1;
   }
-
   var max = arr[0];
   var maxIndex = 0;
-
   for (var i = 1; i < arr.length; i++) {
     if (arr[i] > max) {
       maxIndex = i;
       max = arr[i];
     }
   }
-
   return maxIndex;
 }
-
 symptoms_array = [
   "itching",
   "skin_rash",
@@ -170,7 +170,6 @@ symptoms_array = [
   "red_sore_around_nose",
   "yellow_crust_ooze",
 ];
-
 diseases_array = [
   "Fungal infection",
   "Allergy",
@@ -216,138 +215,202 @@ diseases_array = [
 ];
 
 router.get("/", ensureGuest, (req, res) => {
-  res.render("login", {auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient"});
+  try {
+    res.render("login", {
+      auth: req.isAuthenticated(),
+      doctor: req.isAuthenticated() && req.user.role === "doctor",
+      patient: req.isAuthenticated() && req.user.role === "patient",
+      notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
 });
 
 router.get("/dashboard", ensureAuth, async (req, res) => {
-  console.log(req.user);
-  let allResults = await Result.find({ googleId: req.user.googleId });
-
-  if (req.user.role === "patient") {
-    let allResults = await Result.find({ googleId: req.user.googleId })
-      .lean()
-      .then((results) => {
-        let suser = {
-          displayName: req.user.displayName,
-          image: req.user.image,
-          googleId: req.user.googleId,
-          role: req.user.role,
-          email: req.user.email,
-        };
-        var options = {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-          second: "numeric",
-        };
-        for (var i = 0; i < results.length; i++) {
-          results[i] = {
-            resultId: results[i]._id,
-            maindisease: results[i].predictionMain[0],
-            mainpercentage: results[i].predictionMain[1],
-            createdAt: results[i].createdAt.toLocaleDateString(
-              "en-US",
-              options
-            ),
+  try {
+    if (req.user.role === "patient") {
+      let allResults = await Result.find({ googleId: req.user.googleId })
+        .lean()
+        .then((results) => {
+          let suser = {
+            displayName: req.user.displayName,
+            image: req.user.image,
+            googleId: req.user.googleId,
+            role: req.user.role,
+            email: req.user.email,
           };
-        }
-        console.log(results);
-        res.render("dashboard", { profile: suser, results: results.reverse(), auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient" });
-      })
-      .catch((error) => res.json({ error: error.message }));
-  } else {
-    let allPres = await Prescription.find({ googleId: req.user.googleId })
-      .lean()
-      .then((prescriptions) => {
-        let suser = {
-          displayName: req.user.displayName,
-          image: req.user.image,
-          googleId: req.user.googleId,
-          role: req.user.role,
-          email: req.user.email,
-        };
-        res.render("doctor", {
-          profile: suser,
-          prescriptions: prescriptions.reverse(),auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient"
-        });
-      })
-      .catch((error) => res.json({ error: error.message }));
+          var options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          };
+          for (var i = 0; i < results.length; i++) {
+            results[i] = {
+              resultId: results[i]._id,
+              maindisease: results[i].predictionMain[0],
+              mainpercentage: results[i].predictionMain[1],
+              createdAt: results[i].createdAt.toLocaleDateString(
+                "en-US",
+                options
+              ),
+            };
+          }
+          console.log(results);
+          res.render("dashboard", {
+            profile: suser,
+            results: results.reverse(),
+            auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+          });
+        })
+        .catch((error) => res.json({ error: error.message }));
+    } else {
+      let allPres = await Prescription.find({ googleId: req.user.googleId })
+        .lean()
+        .then((prescriptions) => {
+          let suser = {
+            displayName: req.user.displayName,
+            image: req.user.image,
+            googleId: req.user.googleId,
+            role: req.user.role,
+            email: req.user.email,
+          };
+          res.render("doctor", {
+            profile: suser,
+            prescriptions: prescriptions.reverse(),
+            auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+          });
+        })
+        .catch((error) => res.json({ error: error.message }));
+    }
+  } catch (error) {
+    res.json({ error: error.message });
   }
 });
 
 router.get("/role", ensureRoleNotChosen, (req, res) => {
-  res.render("role", {auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient"});
-});
-
-router.get("/form",ensureNotDoctor, (req, res) => {
-  res.render("form", { data: symptoms_array, auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient" });
-});
-
-router.post("/form", ensureNotDoctor,async (req, res) => {
-  console.log(req.body);
-  superagent
-    .post("http://localhost:8000/polls/")
-    .send(req.body)
-    .then(async (response) => {
-      console.log(response.body);
-      console.log(response.body["result"]);
-      resA = response.body["result"];
-      var fin = Array();
-      console.log(diseases_array.length);
-      console.log(resA.length);
-      var maxind = indexOfMax(resA);
-      console.log(maxind);
-      console.log({
-        disease: diseases_array[maxind],
-        percentage: (resA[maxind] * 100).toFixed(2).toString() + "%",
-      });
-      if (req.isAuthenticated()) {
-        console.log(req.user);
-        let result = await Result.create({
-          googleId: req.user.googleId,
-          symptoms: req.body["symptoms"],
-          diseases: resA,
-          predictionMain: [
-            diseases_array[maxind],
-            (resA[maxind] * 100).toFixed(2).toString() + "%",
-          ],
-        });
-        res.redirect(`/result/${result._id}`);
-      } else {
-        var maxperc = (resA[maxind] * 100).toFixed(2).toString() + "%"
-        // res.send({ symptoms: req.body["symptoms"], diseases: resA });
-        fin = Array();
-        var mres = { symptoms: req.body["symptoms"], diseases: resA };
-        for (var i = 0; i < diseases_array.length; i++) {
-          mres.diseases[i] = {
-            name: diseases_array[i],
-            percn: mres.diseases[i],
-            percs: (mres.diseases[i] * 100).toFixed(2).toString() + "%",
-          };
-        }
-        for (var i = 0; i < mres.symptoms.length; i++) {
-          mres.symptoms[i] = symptoms_array[mres.symptoms[i]];
-        }
-
-        mres.diseases.sort(sortFunction);
-        // console.log(resA)
-        res.render("result", {
-          diseases: mres.diseases,
-          symptoms: mres.symptoms,
-          pdn: diseases_array[maxind],
-          pdp:maxperc,
-          showProfile: false,
-          auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() ||  req.user.role==="patient"
-        });
-      }
+  try {
+    res.render("role", {
+      auth: req.isAuthenticated(),
+      doctor: req.isAuthenticated() && req.user.role === "doctor",
+      patient: req.isAuthenticated() && req.user.role === "patient",
+      notDoctor: !req.isAuthenticated() || req.user.role === "patient",
     });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
+router.get("/form", ensureNotDoctor, (req, res) => {
+  try {
+    res.render("form", {
+      data: symptoms_array,
+      auth: req.isAuthenticated(),
+      doctor: req.isAuthenticated() && req.user.role === "doctor",
+      patient: req.isAuthenticated() && req.user.role === "patient",
+      notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
+router.post("/form", ensureNotDoctor, async (req, res) => {
+  try {
+    console.log(req.body);
+    superagent
+      .post("http://localhost:8000/polls/")
+      .send(req.body)
+      .then(async (response) => {
+        // console.log(response)
+        if (response.body.error){
+          res.json({ error: "error" });
+        }
+        else{
+          console.log(response.body);
+        console.log(response.body["result"]);
+        resA = response.body["result"];
+        var fin = Array();
+        console.log(diseases_array.length);
+        console.log(resA.length);
+        var maxind = indexOfMax(resA);
+        console.log(maxind);
+        console.log({
+          disease: diseases_array[maxind],
+          percentage: (resA[maxind] * 100).toFixed(2).toString() + "%",
+        });
+        if (req.isAuthenticated()) {
+          console.log(req.user);
+          let result = await Result.create(
+            {
+              googleId: req.user.googleId,
+              symptoms: req.body["symptoms"],
+              diseases: resA,
+              predictionMain: [
+                diseases_array[maxind],
+                (resA[maxind] * 100).toFixed(2).toString() + "%",
+              ],
+            },
+            function (err, instance) {
+              if (err) {
+                res.json({ error: error.message });
+                return;
+              }
+              // saved!
+            }
+          );
+          res.redirect(`/result/${result._id}`);
+        } else {
+          var maxperc = (resA[maxind] * 100).toFixed(2).toString() + "%";
+          // res.send({ symptoms: req.body["symptoms"], diseases: resA });
+          fin = Array();
+          var mres = { symptoms: req.body["symptoms"], diseases: resA };
+          for (var i = 0; i < diseases_array.length; i++) {
+            mres.diseases[i] = {
+              name: diseases_array[i],
+              percn: mres.diseases[i],
+              percs: (mres.diseases[i] * 100).toFixed(2).toString() + "%",
+            };
+          }
+          for (var i = 0; i < mres.symptoms.length; i++) {
+            mres.symptoms[i] = symptoms_array[mres.symptoms[i]];
+          }
+
+          mres.diseases.sort(sortFunction);
+          // console.log(resA)
+          res.render("result", {
+            diseases: mres.diseases,
+            symptoms: mres.symptoms,
+            pdn: diseases_array[maxind],
+            pdp: maxperc,
+            showProfile: false,
+            auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+          });
+        }
+
+        }
+
+      });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
 });
 
 router.post("/role", ensureRoleNotChosen, async (req, res) => {
-  console.log(req.body.role);
+  // console.log(req.body.role);
   try {
     var query = { googleId: req.user.googleId };
     var newValues = { $set: { role: req.body.role } };
@@ -357,10 +420,11 @@ router.post("/role", ensureRoleNotChosen, async (req, res) => {
     console.log(
       `${user.matchedCount} document(s) matched the filter, updated ${user.modifiedCount} document(s)`
     );
+
+    res.redirect("/");
   } catch (error) {
     console.log(error);
   }
-  res.redirect("/");
 });
 
 module.exports = router;
