@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuth, ensureGuest } = require("../middleware/auth");
+const { ensureAuth, ensureGuest, ensureDoctor, ensurePatient } = require("../middleware/auth");
 const User = require("../models/User");
 var spawn = require("child_process").spawn;
 const http = require("http");
@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 const Result = require("../models/Result");
 const Prescription = require("../models/Prescription");
 
-router.post("/:resultId", ensureAuth, async (req, res) => {
+router.post("/:resultId", ensureDoctor, async (req, res) => {
   let resultId = req.params.resultId;
   console.log(req.user.googleId);
   console.log(resultId);
