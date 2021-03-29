@@ -1,9 +1,21 @@
 <div id="mySidenav" class="sidenav">
+    {{#if auth}}
     <a href="/dashboard" class="active">Dashboard</a></li>
+    {{/if}}
+    {{#if doctor}}
     <a href="/user/patient">Patients</a>
+    {{/if}}
+    {{#if patient}}
     <a href="/user/doctor">Doctors</a>
+    {{/if}}
+    {{#if notDoctor}}
     <a href="/form">Form</a>
+    {{/if}}
+    {{#if auth}}
     <a href="/auth/logout">Logout</a>
+    {{else}}
+    <a href="/auth/google">Enter</a>
+    {{/if}}
 </div>
 
 <div id="main">
