@@ -20,7 +20,15 @@ router.get("/patient", ensureDoctor, (req, res) => {
     let all = User.find({ role: "patient" })
       .lean()
       .then((users) => {
+        var loggedInProfile = {
+          googleId: req.user.googleId,
+          displayName: req.user.displayName,
+          role: req.user.role,
+          email: req.user.email,
+          image: req.user.image,
+        }
         res.render("user", {
+          profile: loggedInProfile,
           role: "Patients",
           users: users.reverse(),
           auth: req.isAuthenticated(),
@@ -40,7 +48,15 @@ router.get("/doctor", ensurePatient, (req, res) => {
     let all = User.find({ role: "doctor" })
       .lean()
       .then((users) => {
+        var loggedInProfile = {
+          googleId: req.user.googleId,
+          displayName: req.user.displayName,
+          role: req.user.role,
+          email: req.user.email,
+          image: req.user.image,
+        }
         res.render("user", {
+          profile: loggedInProfile,
           role: "Doctors",
           users: users.reverse(),
           auth: req.isAuthenticated(),

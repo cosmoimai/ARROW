@@ -236,6 +236,13 @@ router.get("/:id", ensureAuth, async (req, res) => {
         boolIsDoctor = true;
       }
 
+      var loggedInProfile = {
+        googleId: req.user.googleId,
+        displayName: req.user.displayName,
+        role: req.user.role,
+        email: req.user.email,
+        image: req.user.image,
+      }
         
       var showProfile = req.user.googleId === mres.googleId || boolIsDoctor;
 
@@ -246,6 +253,7 @@ router.get("/:id", ensureAuth, async (req, res) => {
         console.log(req.user.googleId, mres.googleId);
         if (showProfile) {
           res.render("result", {
+            profile: loggedInProfile,
             resultId: req.params.id,
             diseases: mres.diseases,
             symptoms: mres.symptoms,
@@ -263,6 +271,7 @@ router.get("/:id", ensureAuth, async (req, res) => {
           });
         } else {
           res.render("result", {
+            profile: loggedInProfile,
             resultId: req.params.id,
             diseases: mres.diseases,
             symptoms: mres.symptoms,

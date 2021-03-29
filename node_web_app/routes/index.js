@@ -215,16 +215,8 @@ diseases_array = [
 ];
 
 router.get("/", ensureGuest, (req, res) => {
-  try {
-    res.render("login", {
-      auth: req.isAuthenticated(),
-      doctor: req.isAuthenticated() && req.user.role === "doctor",
-      patient: req.isAuthenticated() && req.user.role === "patient",
-      notDoctor: !req.isAuthenticated() || req.user.role === "patient",
-    });
-  } catch (error) {
-    res.json({ error: error.message });
-  }
+  res.redirect('/form');
+  return
 });
 
 router.get("/dashboard", ensureAuth, async (req, res) => {
@@ -313,8 +305,21 @@ router.get("/role", ensureRoleNotChosen, (req, res) => {
 
 router.get("/form", ensureNotDoctor, (req, res) => {
   try {
+    if (req.isAuthenticated()){
+      var loggedInProfile = {
+        googleId: req.user.googleId,
+        displayName: req.user.displayName,
+        role: req.user.role,
+        email: req.user.email,
+        image: req.user.image,
+      }
+    }
+    else{
+      var loggedInProfile = {}
+    }
+
     res.render("form", {
-      data: symptoms_array,
+      profile: loggedInProfile,
       auth: req.isAuthenticated(),
       doctor: req.isAuthenticated() && req.user.role === "doctor",
       patient: req.isAuthenticated() && req.user.role === "patient",
@@ -360,13 +365,6 @@ router.post("/form", ensureNotDoctor, async (req, res) => {
                 diseases_array[maxind],
                 (resA[maxind] * 100).toFixed(2).toString() + "%",
               ],
-            },
-            function (err, instance) {
-              if (err) {
-                res.json({ error: error.message });
-                return;
-              }
-              // saved!
             }
           );
           res.redirect(`/result/${result._id}`);
