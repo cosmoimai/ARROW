@@ -28,9 +28,9 @@ router.get("/patient", ensureDoctor, (req, res) => {
           image: req.user.image,
         }
         res.render("user", {
-          layout: 'two.hbs',
           profile: loggedInProfile,
-          role: "Patients",
+          layout: 'two.hbs',
+          role: "patients",
           users: users.reverse(),
           auth: req.isAuthenticated(),
           doctor: req.isAuthenticated() && req.user.role === "doctor",
@@ -44,7 +44,7 @@ router.get("/patient", ensureDoctor, (req, res) => {
   }
 });
 
-router.get("/doctor", ensurePatient, (req, res) => {
+router.get("/doctor", ensureAuth, (req, res) => {
   try {
     let all = User.find({ role: "doctor" })
       .lean()
@@ -57,9 +57,9 @@ router.get("/doctor", ensurePatient, (req, res) => {
           image: req.user.image,
         }
         res.render("user", {
-          layout: 'two.hbs',
           profile: loggedInProfile,
-          role: "Doctors",
+          layout: 'two.hbs',
+          role: "doctors",
           users: users.reverse(),
           auth: req.isAuthenticated(),
           doctor: req.isAuthenticated() && req.user.role === "doctor",
@@ -78,8 +78,11 @@ router.get("/:gid", ensureAuth, async (req, res) => {
     let user = await User.findOne({ googleId: req.params.gid })
       .lean()
       .then(async (user) => {
-        if (user.role === "patient" && req.user.role === "doctor") {
-          let allResults = await Result.find({ googleId: req.params.gid })
+        if (user.role === "patient" && req.user.role === "patient") {
+          res.redirect("/dashboard");
+        } else {
+          if (user.role === "patient"){
+            let allResults = await Result.find({ googleId: req.params.gid })
             .lean()
             .then((results) => {
               let suser = {
@@ -112,9 +115,18 @@ router.get("/:gid", ensureAuth, async (req, res) => {
               }
 
               console.log(results);
-
-              res.render("dashboard", {
-                profile: suser,
+              
+              var loggedInProfile = {
+                googleId: req.user.googleId,
+                displayName: req.user.displayName,
+                role: req.user.role,
+                email: req.user.email,
+                image: req.user.image,
+              }
+              res.render("userprofile", {
+                layout: 'two.hbs',
+                profile: loggedInProfile,
+                user: suser,
                 results: results.reverse(),
                 auth: req.isAuthenticated(),
                 doctor: req.isAuthenticated() && req.user.role === "doctor",
@@ -124,8 +136,9 @@ router.get("/:gid", ensureAuth, async (req, res) => {
               });
             })
             .catch((error) => res.json({ error: error.message }));
-        } else if (user.role === "doctor" && req.user.role === "patient") {
-          let allPres = await Prescription.find({ googleId: req.params.gid })
+          }
+          else {
+            let allPres = await Prescription.find({ googleId: req.params.gid })
             .lean()
             .then((prescriptions) => {
               let suser = {
@@ -135,8 +148,16 @@ router.get("/:gid", ensureAuth, async (req, res) => {
                 role: user.role,
                 email: user.email,
               };
-              res.render("doctor", {
-                profile: suser,
+              var loggedInProfile = {
+                displayName: req.user.displayName,
+                role: req.user.role,
+                email: req.user.email,
+                image: req.user.image,
+              }
+              res.render("doctorprofile", {
+                layout: 'two.hbs',
+                profile: loggedInProfile,
+                user: suser,
                 prescriptions: prescriptions.reverse(),
                 auth: req.isAuthenticated(),
                 doctor: req.isAuthenticated() && req.user.role === "doctor",
@@ -146,8 +167,7 @@ router.get("/:gid", ensureAuth, async (req, res) => {
               });
             })
             .catch((error) => res.json({ error: error.message }));
-        } else {
-          res.redirect("/dashboard");
+          }
         }
       })
       .catch((error) => res.json({ error: error.message }));

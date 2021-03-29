@@ -1,49 +1,23 @@
-{{!-- <div class="side-2">
-  <a href="/user/{{profile.googleId}}" class="profile">
-  <div class="card">
+<div class="main-2">
+    <a href="/user/{{user.googleId}}" class="user">
+  <div class="card sticky">
     <div class="image">
       <img
-        src="{{profile.image}}"
+        src="{{user.image}}"
         alt=""
         srcset=""
       />
     </div>
     <div class="profile-description">
       <div class="name">
-        {{profile.displayName}}
+        {{user.displayName}}
       </div>
-      <div class="role">
-        {{profile.role}}
+      <div class="email">
+        {{user.email}}
       </div>
     </div>
   </div>
-  <div class="email card">
-    {{profile.email}}
-  </div>
 </a>
-<div class="navigation">
-    {{#if auth}}
-    <a class="card" href="/dashboard" class="active">Dashboard</a></li>
-    {{/if}}
-    {{#if doctor}}
-    <a class="card" href="/user/patient">Patients</a>
-    {{/if}}
-    {{#if patient}}
-    <a class="card" href="/user/doctor">Doctors</a>
-    {{/if}}
-    {{#if notDoctor}}
-    <a class="card" href="/form">Form</a>
-    {{/if}}
-    {{#if auth}}
-    <a class="card" href="/auth/logout">Logout</a>
-    {{else}}
-    <a class="card" href="/auth/google">Enter</a>
-    {{/if}}
-  </div>
-</div> --}}
-
-
-<div class="main-2">
     {{#each prescriptions}}
 
       <div class="prescription-card">

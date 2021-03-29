@@ -1,0 +1,37 @@
+<div class="main-2">
+    <a href="/user/{{user.googleId}}" class="user">
+  <div class="card sticky">
+    <div class="image">
+      <img
+        src="{{user.image}}"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="profile-description">
+      <div class="name">
+        {{user.displayName}}
+      </div>
+      <div class="email">
+        {{user.email}}
+      </div>
+    </div>
+  </div>
+</a>
+  {{#each results}}
+  <a href="/result/{{this.resultId}}">
+    <div class="result-card">
+        <div class="disease-details"> 
+            <div class="disease-percentage">{{this.mainpercentage}}</div>
+            <div class="disease-name">{{this.maindisease}}</div>
+        </div>
+        <div class="percentage-bar">
+            <div class="progress" style="width: {{this.mainpercentage}}"></div>
+        </div>
+        <div class="time">
+          <span>{{this.createdAt}}</span>
+        </div>
+      </div>
+    </a>
+  {{/each}}
+</div>
