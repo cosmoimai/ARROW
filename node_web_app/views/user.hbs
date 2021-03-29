@@ -1,37 +1,72 @@
-<h1>
-    {{role}} :
-</h1>
-<div class="flex">
-    {{#each users}}
-    <a href="/user/{{this.googleId}}" class="col-xl-3 col-sm-6 col-12">
-        <div class="card">
-            <div class="card-content">
-                <div class="card-body">
-                    <div class="media d-flex">
-                        <div class="media-body text-left">
-                            <h3 class="success">
-                                {{this.displayName}}
-                            </h3>
-                            <span>
-                                {{this.email}}
-                            </span>
-                        </div>
-                        <div class="align-self-center">
-                            <img src={{this.image}} class="float-right" />
-                        </div>
-                    </div>
-                    <div class="progress mt-1 mb-0" style="height: 7px;">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="50"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <div class="media-body mt-1 mb-0 text-left" onclick="on()">
-                        <span>
-                            {{this.createdAt}}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </a>
-    {{/each}}
+{{!-- <div class="side-2">
+  <a href="/user/{{profile.googleId}}" class="profile">
+  <div class="card">
+    <div class="image">
+      <img
+        src="{{profile.image}}"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="profile-description">
+      <div class="name">
+        {{profile.displayName}}
+      </div>
+      <div class="role">
+        {{profile.role}}
+      </div>
+    </div>
+  </div>
+  <div class="email card">
+    {{profile.email}}
+  </div>
+</a>
+  <div class="navigation">
+    {{#if auth}}
+    <a class="card" href="/dashboard" class="active">Dashboard</a></li>
+    {{/if}}
+    {{#if doctor}}
+    <a class="card" href="/user/patient">Patients</a>
+    {{/if}}
+    {{#if patient}}
+    <a class="card" href="/user/doctor">Doctors</a>
+    {{/if}}
+    {{#if notDoctor}}
+    <a class="card" href="/form">Form</a>
+    {{/if}}
+    {{#if auth}}
+    <a class="card" href="/auth/logout">Logout</a>
+    {{else}}
+    <a class="card" href="/auth/google">Enter</a>
+    {{/if}}
+  </div>
+</div> --}}
+
+<div class="main-2">
+  {{#each users}}
+    <a href="/user/{{this.googleId}}" class="this">
+  <div class="card">
+    <div class="image">
+      <img
+        src="{{this.image}}"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="profile-description">
+      <div class="name">
+        {{this.displayName}}
+      </div>
+  <div class="email">
+    {{this.email}}
+  </div>
+    </div>
+  </div>
+</a>
+  {{/each}}
 </div>
+
+
+<script>
+  document.getElementById("{{role}}").classList.add("active-field");
+</script>
