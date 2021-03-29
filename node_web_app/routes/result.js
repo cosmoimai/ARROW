@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuth, ensureGuest, ensureDoctor, ensureNotDoctor } = require("../middleware/auth");
+const {
+  ensureAuth,
+  ensureGuest,
+  ensureDoctor,
+  ensureNotDoctor,
+} = require("../middleware/auth");
 const User = require("../models/User");
 var spawn = require("child_process").spawn;
 const http = require("http");
@@ -198,9 +203,10 @@ function sortFunction(a, b) {
 }
 
 router.get("/:id", ensureAuth, async (req, res) => {
-  console.log(req.params.id);
-  var objectId = mongoose.Types.ObjectId(req.params.id);
-  Result.findById(objectId, async (err, mres) => {
+  try {
+    console.log(req.params.id);
+    var objectId = mongoose.Types.ObjectId(req.params.id);
+    Result.findById(objectId, async (err, mres) => {
     fin = Array();
     for (var i = 0; i < diseases_array.length; i++) {
       mres.diseases[i] = {
@@ -215,58 +221,70 @@ router.get("/:id", ensureAuth, async (req, res) => {
     mres.diseases.sort(sortFunction);
 
     let user = await User.findOne({ googleId: mres.googleId })
+    .lean()
+    .then(async (user) => {
+      let pro = {
+        googleId: user.googleId,
+        displayName: user.displayName,
+        image: user.image,
+        role: user.role.toUpperCase(),
+        email: user.email,
+      };
+      console.log(user);
+      boolIsDoctor = false;
+      if (req.user.role === "doctor") {
+        boolIsDoctor = true;
+      }
+
+        
+      var showProfile = req.user.googleId === mres.googleId || boolIsDoctor;
+
+
+      let queryPres = await Prescription.find({ resultId: req.params.id })
       .lean()
-      .then(async (user) => {
-        let pro = {
-          googleId: user.googleId,
-          displayName: user.displayName,
-          image: user.image,
-          role: user.role.toUpperCase(),
-          email: user.email,
-        };
-        console.log(user);
-        boolIsDoctor = false;
-        if (req.user.role === "doctor") {
-          boolIsDoctor = true;
-        }
-
-        var showProfile = req.user.googleId === mres.googleId || boolIsDoctor;
-
-
-        let queryPres = await Prescription.find({ resultId: req.params.id })
-          .lean()
-          .then(async (prescriptions) => {
-            console.log(req.user.googleId , mres.googleId)
-            if (showProfile){
-              res.render("result", {
-              resultId: req.params.id,
-              diseases: mres.diseases,
-              symptoms: mres.symptoms,
-              createdAt: mres.createdAt,
-              user: pro,
-              pdn: mres.predictionMain[0],
-              pdp: mres.predictionMain[1],
-              prescriptions: prescriptions.reverse(),
-              showProfile: showProfile,
-              auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() ||  req.user.role==="patient"
-            });
-            }
-            else{
-              res.render("result", {
-              resultId: req.params.id,
-              diseases: mres.diseases,
-              symptoms: mres.symptoms,
-              createdAt: mres.createdAt,
-              pdn: mres.predictionMain[0],
-              pdp: mres.predictionMain[1],
-              prescriptions: prescriptions.reverse(),
-              showProfile: showProfile,
-              auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() ||  req.user.role==="patient"
-              });
-            }
+      .then(async (prescriptions) => {
+        console.log(req.user.googleId, mres.googleId);
+        if (showProfile) {
+          res.render("result", {
+            resultId: req.params.id,
+            diseases: mres.diseases,
+            symptoms: mres.symptoms,
+            createdAt: mres.createdAt,
+            user: pro,
+            pdn: mres.predictionMain[0],
+            pdp: mres.predictionMain[1],
+            prescriptions: prescriptions.reverse(),
+            showProfile: showProfile,
+            auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor:
+              !req.isAuthenticated() || req.user.role === "patient",
           });
-      });
+        } else {
+          res.render("result", {
+            resultId: req.params.id,
+            diseases: mres.diseases,
+            symptoms: mres.symptoms,
+            createdAt: mres.createdAt,
+            pdn: mres.predictionMain[0],
+            pdp: mres.predictionMain[1],
+            prescriptions: prescriptions.reverse(),
+            showProfile: showProfile,
+            auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor:
+              !req.isAuthenticated() || req.user.role === "patient",
+          });
+        }
+      })
+      .catch((error) => res.json({ error: error.message }));
   });
+});
+} catch (error) {
+res.json({ error: error.message });
+}
 });
 
 module.exports = router;
