@@ -320,6 +320,7 @@ router.get("/form", ensureNotDoctor, (req, res) => {
 
     res.render("form", {
       profile: loggedInProfile,
+      data: symptoms_array,
       auth: req.isAuthenticated(),
       doctor: req.isAuthenticated() && req.user.role === "doctor",
       patient: req.isAuthenticated() && req.user.role === "patient",
