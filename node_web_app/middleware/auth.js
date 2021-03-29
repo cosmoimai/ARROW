@@ -69,4 +69,20 @@ module.exports = {
       res.redirect("/");
     }
   },
+  ensureNotDoctor: (req, res, next) => {
+    if (req.isAuthenticated()) {
+      res.auth = true
+      if (req.user.role !== "doctor") {
+        res.notDoctor = true
+        return next();
+      }
+      else{
+        res.redirect("/dashboard")
+      }
+    } else {
+      res.guest = true
+      res.notDoctor = true
+      return next();
+    }
+  }
 };
