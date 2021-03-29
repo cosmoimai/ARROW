@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuth, ensureGuest } = require("../middleware/auth");
+const { ensureAuth, ensureGuest, ensureDoctor, ensurePatient } = require("../middleware/auth");
 const User = require("../models/User");
 var spawn = require("child_process").spawn;
 const http = require("http");
@@ -10,29 +10,29 @@ const mongoose = require("mongoose");
 const Result = require("../models/Result");
 const Prescription = require("../models/Prescription");
 
-router.get("/patient", (req, res) => {
+router.get("/patient", ensureDoctor,(req, res) => {
   let all = User.find({ role: "patient" })
     .lean()
     .then((users) => {
-      res.render("user", { role: "Patients", users: users.reverse() });
+      res.render("user", { role: "Patients", users: users.reverse(), auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient" });
     })
     .catch((error) => res.json({ error: error.message }));
 });
 
-router.get("/doctor", (req, res) => {
+router.get("/doctor", ensurePatient,(req, res) => {
   let all = User.find({ role: "doctor" })
     .lean()
     .then((users) => {
-      res.render("user", { role: "Doctors", users: users.reverse() });
+      res.render("user", { role: "Doctors", users: users.reverse(), auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient" });
     })
     .catch((error) => res.json({ error: error.message }));
 });
 
-router.get("/:gid", async (req, res) => {
+router.get("/:gid",ensureAuth, async (req, res) => {
   let user = await User.findOne({ googleId: req.params.gid })
     .lean()
     .then(async (user) => {
-      if (user.role === "patient") {
+      if (user.role === 'patient' && req.user.role==="doctor"){
         let allResults = await Result.find({ googleId: req.params.gid })
           .lean()
           .then((results) => {
@@ -67,13 +67,11 @@ router.get("/:gid", async (req, res) => {
 
             console.log(results);
 
-            res.render("dashboard", {
-              profile: suser,
-              results: results.reverse(),
-            });
+            res.render("dashboard", { profile: suser, results: results.reverse(), auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient" });
           })
           .catch((error) => res.json({ error: error.message }));
-      } else {
+      } 
+      if (user.role === 'doctor' && req.user.role==="patient"){
         let allPres = await Prescription.find({ googleId: req.params.gid })
           .lean()
           .then((prescriptions) => {
@@ -86,10 +84,13 @@ router.get("/:gid", async (req, res) => {
             };
             res.render("doctor", {
               profile: suser,
-              prescriptions: prescriptions.reverse(),
+              prescriptions: prescriptions.reverse(), auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient"
             });
           })
           .catch((error) => res.json({ error: error.message }));
+      }
+      else{
+        res.redirect("/dashboard")
       }
     });
 });
