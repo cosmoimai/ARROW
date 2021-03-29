@@ -1,10 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-  ensureAuth,
-  ensureGuest,
-  ensureRoleNotChosen,
-} = require("../middleware/auth");
+const { ensureAuth, ensureGuest, ensureRoleNotChosen, ensureNotDoctor } = require("../middleware/auth");
 const User = require("../models/User");
 var spawn = require("child_process").spawn;
 const http = require("http");
@@ -15,10 +11,10 @@ const Result = require("../models/Result");
 const Prescription = require("../models/Prescription");
 
 function sortFunction(a, b) {
-  if (a[1] === b[1]) {
+  if (a.percn === b.percn) {
     return 1;
   } else {
-    return a[1] > b[1] ? -1 : 1;
+    return a.percn > b.percn ? -1 : 1;
   }
 }
 
@@ -220,7 +216,7 @@ diseases_array = [
 ];
 
 router.get("/", ensureGuest, (req, res) => {
-  res.render("login");
+  res.render("login", {auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient"});
 });
 
 router.get("/dashboard", ensureAuth, async (req, res) => {
@@ -259,7 +255,7 @@ router.get("/dashboard", ensureAuth, async (req, res) => {
           };
         }
         console.log(results);
-        res.render("dashboard", { profile: suser, results: results.reverse() });
+        res.render("dashboard", { profile: suser, results: results.reverse(), auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient" });
       })
       .catch((error) => res.json({ error: error.message }));
   } else {
@@ -275,7 +271,7 @@ router.get("/dashboard", ensureAuth, async (req, res) => {
         };
         res.render("doctor", {
           profile: suser,
-          prescriptions: prescriptions.reverse(),
+          prescriptions: prescriptions.reverse(),auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient"
         });
       })
       .catch((error) => res.json({ error: error.message }));
@@ -283,14 +279,14 @@ router.get("/dashboard", ensureAuth, async (req, res) => {
 });
 
 router.get("/role", ensureRoleNotChosen, (req, res) => {
-  res.render("role");
+  res.render("role", {auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient"});
 });
 
-router.get("/form", (req, res) => {
-  res.render("form", { data: symptoms_array });
+router.get("/form",ensureNotDoctor, (req, res) => {
+  res.render("form", { data: symptoms_array, auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() || req.user.role==="patient" });
 });
 
-router.post("/form", async (req, res) => {
+router.post("/form", ensureNotDoctor,async (req, res) => {
   console.log(req.body);
   superagent
     .post("http://localhost:8000/polls/")
@@ -321,7 +317,31 @@ router.post("/form", async (req, res) => {
         });
         res.redirect(`/result/${result._id}`);
       } else {
-        res.send({ symptoms: req.body["symptoms"], diseases: resA });
+        var maxperc = (resA[maxind] * 100).toFixed(2).toString() + "%"
+        // res.send({ symptoms: req.body["symptoms"], diseases: resA });
+        fin = Array();
+        var mres = { symptoms: req.body["symptoms"], diseases: resA };
+        for (var i = 0; i < diseases_array.length; i++) {
+          mres.diseases[i] = {
+            name: diseases_array[i],
+            percn: mres.diseases[i],
+            percs: (mres.diseases[i] * 100).toFixed(2).toString() + "%",
+          };
+        }
+        for (var i = 0; i < mres.symptoms.length; i++) {
+          mres.symptoms[i] = symptoms_array[mres.symptoms[i]];
+        }
+
+        mres.diseases.sort(sortFunction);
+        // console.log(resA)
+        res.render("result", {
+          diseases: mres.diseases,
+          symptoms: mres.symptoms,
+          pdn: diseases_array[maxind],
+          pdp:maxperc,
+          showProfile: false,
+          auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() ||  req.user.role==="patient"
+        });
       }
     });
 });
