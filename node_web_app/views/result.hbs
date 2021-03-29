@@ -1,224 +1,149 @@
-<h1>
-  Details:
-</h1>
-<div class="flex">
-  {{#if showProfile}}
-    <a href="/user/{{user.googleId}}" class="col-xl-3 col-sm-6 col-12">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-body">
-            <div class="media d-flex">
-              <div class="media-body text-left">
-                <h3 class="success">
-                  {{user.displayName}}
-                </h3>
-                <span class="up">
-                  {{user.role}}
-                </span>
-              </div>
-              <div class="align-self-center">
-                <img src={{user.image}} class="float-right" />
-              </div>
-            </div>
-            <div class="media-body mt-1 mb-0 text-left" onclick="on()">
-              <span>
-                {{user.email}}
-              </span>
-            </div>
-          </div>
-        </div>
+{{!-- <div class="side">
+    {{#if showProfile}}
+  <a href="/user/{{user.googleId}}" class="profile">
+  <div class="card">
+    <div class="image">
+      <img
+        src="{{user.image}}"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="profile-description">
+      <div class="name">
+        {{user.displayName}}
       </div>
-    </a>
-  {{/if}}
-  <div class="col-xl-3 col-sm-6 col-12">
-    <div class="card">
-      <div class="card-content">
-        <div class="card-body">
-          <div class="media d-flex">
-            <div class="media-body text-left">
-              <h3 class="success">
-                {{pdp}}
-              </h3>
-              <span>
-                {{pdn}}
-              </span>
-            </div>
-          </div>
-          <div class="progress mt-1 mb-0" style="height: 7px;">
-            <div
-              class="progress-bar bg-success"
-              role="progressbar"
-              style="width: {{pdp}}"
-              aria-valuenow="50"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            ></div>
-          </div>
-          <div class="media-body mt-1 mb-0 text-left" onclick="on()">
-            <span>
-              {{createdAt}}
-            </span>
-          </div>
-        </div>
+      <div class="role">
+        {{user.role}}
       </div>
     </div>
   </div>
-</div>
-<h1>
-  Symptoms:
-</h1>
-<div class="flex">
-  {{#each symptoms}}
-    <div class="col-xl-3 col-sm-6 col-12">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-body">
-            <div class="media d-flex">
-              <div class="media-body text-left">
-                <h3>
-                  {{this}}
-                </h3>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="email card">
+    {{user.email}}
+  </div>
+</a>
+  {{/if}}
+  <div class="navigation">
+    {{#if auth}}
+    <a class="card" href="/dashboard" class="active">Dashboard</a></li>
+    {{/if}}
+    {{#if doctor}}
+    <a class="card" href="/user/patient">Patients</a>
+    {{/if}}
+    {{#if patient}}
+    <a class="card" href="/user/doctor">Doctors</a>
+    {{/if}}
+    {{#if notDoctor}}
+    <a class="card" href="/form">Form</a>
+    {{/if}}
+    {{#if auth}}
+    <a class="card" href="/auth/logout">Logout</a>
+    {{else}}
+    <a class="card" href="/auth/google">Enter</a>
+    {{/if}}
+  </div>
+</div> --}}
+
+<div class="main">
+  {{#if showProfile}}
+  <a href="/user/{{user.googleId}}" class="user">
+  <div class="card">
+    <div class="image">
+      <img
+        src="{{user.image}}"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="profile-description">
+      <div class="name">
+        {{user.displayName}}
+      </div>
+      <div class="role">
+        {{user.role}}
       </div>
     </div>
-  {{/each}}
-</div>
-<h1>
-  Diseases:
-</h1>
-<div class="flex block-scroll">
-  {{#each diseases}}
-    <div class="col-xl-3 col-sm-6 col-12">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-body">
-            <div class="media d-flex">
-              <div class="media-body text-left">
-                <h3 class="success">
-                  {{this.percs}}
-                </h3>
-                <span>
-                  {{this.name}}
-                </span>
-              </div>
-              <div class="align-self-center"></div>
-            </div>
-            <div class="progress mt-1 mb-0" style="height: 7px;">
-              <div
-                class="progress-bar bg-success"
-                role="progressbar"
-                style="width: {{this.percs}}"
-                aria-valuenow="50"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-          </div>
+  </div>
+  <div class="email card">
+    {{user.email}}
+  </div>
+</a>
+{{/if}}
+    {{!-- <div class="result-card">
+        <div class="disease-details"> 
+            <div class="disease-percentage">{{pdp}}</div>
+            <div class="disease-name">{{pdn}}</div>
         </div>
-      </div>
-    </div>
-  {{/each}}
-</div>
-{{#if auth}}
-  <h1>
-    Prescriptions:
-  </h1>
-  {{#if doctor}}
-    <form action="/prescription/{{resultId}}" method="post" class="role-select">
-      <div class="ui form">
-        <div class="field">
-          <div class="flex">
-            <textarea name="prescription"></textarea>
-            <input type="submit" class="btn" />
-          </div>
+        <div class="percentage-bar">
+            <div class="progress" style="width: {{pdp}}"></div>
         </div>
+        <div class="time">
+          <span>{{createdAt}}</span>
+        </div>
+    </div> --}}
+    {{#if doctor}}
+    <form action="/prescription/{{this.resultId}}" method="post">
+      <div class="large-textarea card column">
+      <textarea name="prescription"></textarea>
+      <button class="p-form-card grey">Prescribe</button>
       </div>
     </form>
   {{/if}}
-  {{! <div class="flex"> }}
-  <div class="block-scroll">
-    {{#each prescriptions}}
-      <div class="flex pres">
-        <a href="/user/{{this.googleId}}" class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="success">
-                      {{this.user.displayName}}
-                    </h3>
-                    {{!-- <span>
-                    {{this.user.email}}
-                  </span> --}}
-                  </div>
-                  <div class="align-self-center">
-                    <img src={{this.user.image}} class="float-right" />
-                  </div>
-                </div>
-                <div class="progress mt-1 mb-0" style="height: 3px;">
-                  <div
-                    class="progress-bar bg-success"
-                    role="progressbar"
-                    style="width: 100%"
-                    aria-valuenow="50"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  ></div>
-                </div>
-                <div class="media-body mt-1 mb-0 text-left" onclick="on()">
-                  <span>
-                    {{this.user.email}}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
-        {{!-- <textarea name="prescription">{{this.prescription}}</textarea> --}}
-        {{! <div class="w-50"> }}
-        {{! <div class="card"> }}
-        <div class="ui form result-text">
-          <div class="field">
-            <textarea name="prescription" readonly>{{this.prescription}}</textarea>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <span>
-                      {{this.createdAt}}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {{!-- <div class="card-content">
-            <div class="card-body">
-              <div class="media d-flex">
-                <div class="media-body text-left">
-                  <h3>
-                    {{this.prescription}}
-                  </h3>
-                </div>
-              </div>
-            </div>
-          </div> --}}
-        {{! </div> }}
-        {{! </div> }}
-      </div>
-    {{/each}}
-  </div>
-{{/if}}
-{{! </div> }}
-<div class="marg">
-  <br />
+    {{#each symptoms}}
+    <div class="card">
+      {{this}}
+    </div>
+  {{/each}}
+  {{!-- <div class="card email">Prescription</div> --}}
+  
 </div>
+
+<div class="main">
+  {{#each diseases}}
+    <div class="result-card">
+        <div class="disease-details"> 
+            <div class="disease-percentage">{{this.percs}}</div>
+            <div class="disease-name">{{this.name}}</div>
+        </div>
+        <div class="percentage-bar">
+            <div class="progress" style="width: {{this.percs}}"></div>
+        </div>
+    </div>
+  {{/each}}
+</div>
+
+{{#if auth}}
+<div class="main">
+    {{#each prescriptions}}
+
+      <div class="prescription-card">
+
+        <a href="/user/{{this.googleId}}" class="small-profile">
+            <div class="image">
+                <img class="small-image" src="{{this.user.image}}"
+                    alt="" srcset="" />
+            </div>
+            <div class="profile-description-small">
+                <div class="small-name">
+                    {{this.user.displayName}}
+                </div>
+                <div class="small-email">
+                    {{this.user.email}}
+                </div>
+            </div>
+            
+        </a>
+        <div class="time">
+                <span>
+                    
+        {{this.createdAt}}
+                </span>
+            </div>
+            <div class="prescription">
+              
+            <textarea name="prescription" readonly>{{this.prescription}}</textarea>
+            </div>
+            
+          </div>
+{{/each}}
+{{/if}}

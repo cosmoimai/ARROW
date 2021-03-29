@@ -1,23 +1,45 @@
-<div id="mySidenav" class="sidenav">
+{{#if auth}}
+<a href="/user/{{profile.googleId}}" class="profile">
+  <div class="card">
+    <div class="image">
+      <img
+        src="{{profile.image}}"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="profile-description">
+      <div class="name">
+        {{profile.displayName}}
+      </div>
+      <div class="role">
+        {{profile.role}}
+      </div>
+    </div>
+  </div>
+  <div class="email card">
+    {{profile.email}}
+  </div>
+</a>
+{{/if}}
+  {{!-- {{/if}} --}}
+  <div class="navigation">
     {{#if auth}}
-    <a href="/dashboard" class="active">Dashboard</a></li>
+    <a class="card" id="dashboard" href="/dashboard">Dashboard</a></li>
     {{/if}}
     {{#if doctor}}
-    <a href="/user/patient">Patients</a>
-    {{/if}}
-    {{#if patient}}
-    <a href="/user/doctor">Doctors</a>
-    {{/if}}
-    {{#if notDoctor}}
-    <a href="/form">Form</a>
+    <a class="card" id="patients" href="/user/patient">Patients</a>
     {{/if}}
     {{#if auth}}
-    <a href="/auth/logout">Logout</a>
-    {{else}}
-    <a href="/auth/google">Enter</a>
+    <a class="card" id="doctors" href="/user/doctor">Doctors</a>
     {{/if}}
-</div>
-
-<div id="main">
-    <span class="openbtn" style="font-size:30px;cursor:pointer" onclick="toggleNav()">&#9776; Navigate</span>
+    {{#if notDoctor}}
+    <a class="card" id="form" href="/form">Form</a>
+    {{/if}}
+    {{#if auth}}
+    <a class="card" id="logout" href="/auth/logout">Logout</a>
+    {{else}}
+    <a class="card" id="enter" href="/auth/google">Enter</a>
+    {{/if}}
+  </div>
 </div>
