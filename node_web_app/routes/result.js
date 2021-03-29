@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuth, ensureGuest } = require("../middleware/auth");
+const { ensureAuth, ensureGuest, ensureDoctor, ensureNotDoctor } = require("../middleware/auth");
 const User = require("../models/User");
 var spawn = require("child_process").spawn;
 const http = require("http");
@@ -197,7 +197,7 @@ function sortFunction(a, b) {
   }
 }
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", ensureAuth, async (req, res) => {
   console.log(req.params.id);
   var objectId = mongoose.Types.ObjectId(req.params.id);
   Result.findById(objectId, async (err, mres) => {
@@ -218,6 +218,7 @@ router.get("/:id", async (req, res) => {
       .lean()
       .then(async (user) => {
         let pro = {
+          googleId: user.googleId,
           displayName: user.displayName,
           image: user.image,
           role: user.role.toUpperCase(),
@@ -229,10 +230,15 @@ router.get("/:id", async (req, res) => {
           boolIsDoctor = true;
         }
 
+        var showProfile = req.user.googleId === mres.googleId || boolIsDoctor;
+
+
         let queryPres = await Prescription.find({ resultId: req.params.id })
           .lean()
           .then(async (prescriptions) => {
-            res.render("result", {
+            console.log(req.user.googleId , mres.googleId)
+            if (showProfile){
+              res.render("result", {
               resultId: req.params.id,
               diseases: mres.diseases,
               symptoms: mres.symptoms,
@@ -241,8 +247,23 @@ router.get("/:id", async (req, res) => {
               pdn: mres.predictionMain[0],
               pdp: mres.predictionMain[1],
               prescriptions: prescriptions.reverse(),
-              doctor: boolIsDoctor,
+              showProfile: showProfile,
+              auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() ||  req.user.role==="patient"
             });
+            }
+            else{
+              res.render("result", {
+              resultId: req.params.id,
+              diseases: mres.diseases,
+              symptoms: mres.symptoms,
+              createdAt: mres.createdAt,
+              pdn: mres.predictionMain[0],
+              pdp: mres.predictionMain[1],
+              prescriptions: prescriptions.reverse(),
+              showProfile: showProfile,
+              auth: req.isAuthenticated(), doctor: req.isAuthenticated() && req.user.role==="doctor", patient: req.isAuthenticated() && req.user.role==="patient", notDoctor: !req.isAuthenticated() ||  req.user.role==="patient"
+              });
+            }
           });
       });
   });
