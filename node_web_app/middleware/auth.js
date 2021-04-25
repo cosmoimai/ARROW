@@ -2,6 +2,7 @@ module.exports = {
   ensureAuth: (req, res, next) => {
     if (req.isAuthenticated()) {
       res.auth = true
+      // console.log(req.user.role)
       if (req.user.role === undefined) {
         res.redirect("/role");
         return;
@@ -19,7 +20,8 @@ module.exports = {
         res.redirect("/role");
         return;
       }
-      res.redirect("/dashboard");
+      // console.log(req.user.role)
+      res.redirect("/dashboard")
     } else {
       res.guest = true
       return next();
@@ -29,7 +31,7 @@ module.exports = {
     if (req.isAuthenticated()) {
       res.auth = true
       if (req.user.role !== undefined) {
-        res.redirect("/");
+        res.redirect("/dashboard");
         return;
       }
       res.RoleNotChosen = true
@@ -46,8 +48,11 @@ module.exports = {
         res.patient = true
         return next();
       }
-      else{
+      else if (req.user.role === "doctor"){
         res.redirect("/dashboard")
+      }
+      else {
+        res.redirect("/role");
       }
     } else {
       res.guest = true
@@ -61,8 +66,11 @@ module.exports = {
         res.doctor = true
         return next();
       }
-      else{
+      else if (req.user.role === "patient"){
         res.redirect("/dashboard")
+      }
+      else {
+        res.redirect("/role");
       }
     } else {
       res.guest = true
@@ -72,14 +80,19 @@ module.exports = {
   ensureNotDoctor: (req, res, next) => {
     if (req.isAuthenticated()) {
       res.auth = true
-      if (req.user.role !== "doctor") {
+      if (req.user.role === "patient") {
+        res.set('role', 'patient')
         res.notDoctor = true
         return next();
       }
-      else{
+      else if (req.user.role === "doctor"){
         res.redirect("/dashboard")
       }
+      else {
+        res.redirect("/role")
+      }
     } else {
+      res.set('role', 'guest')
       res.guest = true
       res.notDoctor = true
       return next();

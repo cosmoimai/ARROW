@@ -1,3 +1,5 @@
+<div class="card logo"><img class='logo-i' src="../images/logo.png" alt="Arrow" srcset=""></div>
+
 {{#if auth}}
 <a href="/user/{{profile.googleId}}" class="profile">
   <div class="card">
@@ -23,7 +25,9 @@
 </a>
 {{/if}}
   {{!-- {{/if}} --}}
+
   <div class="navigation">
+        
     {{#if auth}}
     <a class="card" id="dashboard" href="/dashboard">Dashboard</a></li>
     {{/if}}
@@ -41,5 +45,8 @@
     {{else}}
     <a class="card" id="enter" href="/auth/google">Enter</a>
     {{/if}}
+    {{!-- <div class="card"> --}}
+
+    {{!-- </div> --}}
   </div>
 </div>

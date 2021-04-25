@@ -1,9 +1,10 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
+const { ensureGuest, ensureAuth } = require('../middleware/auth')
 
 router.get(
-  "/google",
+  "/google",  ensureGuest,
   passport.authenticate("google", {
     scope: [
       "https://www.googleapis.com/auth/userinfo.profile",
@@ -13,7 +14,7 @@ router.get(
 );
 
 router.get(
-  "/google/callback",
+  "/google/callback", ensureGuest,
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
     res.redirect("/dashboard/");

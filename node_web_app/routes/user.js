@@ -40,7 +40,15 @@ router.get("/patient", ensureDoctor, (req, res) => {
       })
       .catch((error) => res.json({ error: error.message }));
   } catch (error) {
-    res.json({ error: error.message });
+    res.render("error", {
+      layout: 'two.hbs',
+      'message': error.message,
+      auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+    })
+    // res.json({ error: error.message });
   }
 });
 
@@ -69,7 +77,15 @@ router.get("/doctor", ensureAuth, (req, res) => {
       })
       .catch((error) => res.json({ error: error.message }));
   } catch (error) {
-    res.json({ error: error.message });
+    res.render("error", {
+      layout: 'two.hbs',
+      'message': error.message,
+      auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+    })
+    // res.json({ error: error.message });
   }
 });
 
@@ -135,7 +151,17 @@ router.get("/:gid", ensureAuth, async (req, res) => {
                   !req.isAuthenticated() || req.user.role === "patient",
               });
             })
-            .catch((error) => res.json({ error: error.message }));
+            .catch((error) => {
+              res.render("error", {
+                layout: 'two.hbs',
+                'message': error.message,
+                auth: req.isAuthenticated(),
+                      doctor: req.isAuthenticated() && req.user.role === "doctor",
+                      patient: req.isAuthenticated() && req.user.role === "patient",
+                      notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+              })
+              // res.json({ error: error.message });
+            });
           }
           else {
             let allPres = await Prescription.find({ googleId: req.params.gid })
@@ -149,6 +175,7 @@ router.get("/:gid", ensureAuth, async (req, res) => {
                 email: user.email,
               };
               var loggedInProfile = {
+                googleId: req.user.googleId,
                 displayName: req.user.displayName,
                 role: req.user.role,
                 email: req.user.email,
@@ -166,13 +193,41 @@ router.get("/:gid", ensureAuth, async (req, res) => {
                   !req.isAuthenticated() || req.user.role === "patient",
               });
             })
-            .catch((error) => res.json({ error: error.message }));
+            .catch((error) => {
+    res.render("error", {
+      layout: 'two.hbs',
+      'message': error.message,
+      auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+    })
+    // res.json({ error: error.message });
+  });
           }
         }
       })
-      .catch((error) => res.json({ error: error.message }));
+      .catch((error) => {
+    res.render("error", {
+      layout: 'two.hbs',
+      'message': error.message,
+      auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+    })
+    // res.json({ error: error.message });
+  });
   } catch (error) {
-    res.json({ error: error.message });
+    res.render("error", {
+      layout: 'two.hbs',
+      'message': error.message,
+      auth: req.isAuthenticated(),
+            doctor: req.isAuthenticated() && req.user.role === "doctor",
+            patient: req.isAuthenticated() && req.user.role === "patient",
+            notDoctor: !req.isAuthenticated() || req.user.role === "patient",
+    })
+    // res.json({ error: error.message });
   }
 });
 

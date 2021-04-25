@@ -17,13 +17,13 @@ const Prescription = require("../models/Prescription");
 
 router.post("/:resultId", ensureDoctor, async (req, res) => {
   try {
-  let resultId = req.params.resultId;
-  console.log(req.user.googleId);
-  console.log(resultId);
-  console.log(req.body.prescription);
-  var objectId = mongoose.Types.ObjectId(resultId);
-  Result.findById(objectId, async (err, mres) => {
-    console.log(mres.predictionMain);
+    let resultId = req.params.resultId;
+    console.log(req.user.googleId);
+    console.log(resultId);
+    console.log(req.body.prescription);
+    var objectId = mongoose.Types.ObjectId(resultId);
+    Result.findById(objectId, async (err, mres) => {
+      console.log(mres.predictionMain);
       predictionMain = mres.predictionMain;
       console.log(predictionMain);
 
@@ -34,25 +34,25 @@ router.post("/:resultId", ensureDoctor, async (req, res) => {
           resultId: resultId,
           prescription: req.body.prescription,
           user: {
-        displayName: req.user.displayName,
-        email: req.user.email,
-        image: req.user.image,
-      },
-      predictionMain: predictionMain,
-    },
-    function (err, instance) {
-      if (err) {
-        res.json({ error: error.message });
-        return;
-      }
-      // saved!
-    }
-  );
-  res.redirect(`/result/${resultId}`);
-});
-} catch (error) {
-res.json({ error: error.message });
-}
+            displayName: req.user.displayName,
+            email: req.user.email,
+            image: req.user.image,
+          },
+          predictionMain: predictionMain,
+        },
+        function (err, instance) {
+          if (err) {
+            res.json({ error: error.message });
+            return;
+          }
+          // saved!
+        }
+      );
+      res.redirect(`/result/${resultId}`);
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
 });
 
 module.exports = router;

@@ -1,19 +1,26 @@
-<form action="role" method="POST" class="role-select">
-  <div>
+<div class="main-2">
+  <form action="role" method="POST" class="role-select">
+  <div class="card">
     <span>
-      Please choose your role:
+      Please choose your role: 
     </span>
   </div>
-
-  <input class="rb" type="radio" id="doctor" name="role" value="doctor" />
+  <div class="card lb">
+    <input class="rb" type="radio" id="doctor" name="role" value="doctor" />
   <label for="doctor">
     Doctor
   </label>
-  <div></div>
+  </div>
+  
+  <div class="card lb">
+    
   <input class="rb" type="radio" id="patient" name="role" value="patient" />
   <label for="patient">
     Patient
   </label>
+  </div>
   <div></div>
-  <input type="submit" />
+  <button  class="result-card" type="submit" class = "btn" value="Submit">Submit </button>
 </form>
+</div>
+

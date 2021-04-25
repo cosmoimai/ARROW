@@ -12,6 +12,14 @@ body {
    */
 }
 
+.logo{
+  justify-content: center;
+}
+
+.logo-i {
+  width: 50%;
+}
+
 :root{ scrollbar-width: none !important } 
 
 a {
@@ -47,11 +55,12 @@ form {
   height: 96vh;
   margin-top: 2vh;
   margin-bottom: 2vh;
+  /* color: #647bff; */
   background-color: #191b2293;
   border-radius: 0.3em;
   overflow-y: scroll;
   overflow-x: hidden;
-  scrollbar-width: none;
+  scrollbar-width: none i !important;
 }
 
 .side {
@@ -84,7 +93,7 @@ form {
   align-items: center;
   overflow-x: scroll;
   overflow-y: scroll;
-  scrollbar-width: none;
+  scrollbar-width: none !important;
   /* overflow: -moz-scrollbars-none !important; */
 }
 
@@ -116,7 +125,7 @@ form {
 .profile-description {
   overflow-x: scroll;
   overflow-y: scroll;
-  scrollbar-width: none;
+  scrollbar-width: none !important;
 }
 
 .name, .disease-percentage {
@@ -144,7 +153,7 @@ form {
   max-width: 75%;
   overflow-x: scroll;
   white-space: nowrap;
-  scrollbar-width: none;
+  scrollbar-width: none !important;
 }
 
 .email {
@@ -324,19 +333,38 @@ input {
 }
 
 ::-webkit-scrollbar {
-  width: 0.1em;
-  height: 0.05em;
+  width: 0.1em !important;
+  height: 0.05em !important;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f111893; 
+  background: #0f111893 !important; 
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888 !important; 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555 !important; 
+}
+
+
+.rb {
+  display: none;
+}
+
+:checked + label {
+border: 1px solid #84ffff;;
+box-shadow: 0 0 5px #84ffff;;
+/* background-color: #84eb92; */
+color: #84ffff;;
+}
+
+
+label {
+  font-size: 1.1em;
+  padding: 0.5em;
+  margin: 0.35em
 }

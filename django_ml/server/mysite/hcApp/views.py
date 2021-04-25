@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import numpy as np
-import pandas as pd
+import numpy as np 
+import pandas as pd 
 import os
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import preprocessing
@@ -15,67 +15,146 @@ import json
 import demjson
 import copy
 
-symptoms_array = ['itching', 'skin_rash', 'nodal_skin_eruptions', 'continuous_sneezing', 'shivering', 'chills', 'joint_pain', 'stomach_pain', 'acidity', 'ulcers_on_tongue', 'muscle_wasting', 'vomiting', 'burning_micturition', 'spotting_ urination', 'fatigue', 'weight_gain', 'anxiety', 'cold_hands_and_feets', 'mood_swings', 'weight_loss', 'restlessness', 'lethargy', 'patches_in_throat', 'irregular_sugar_level', 'cough', 'high_fever', 'sunken_eyes', 'breathlessness', 'sweating', 'dehydration', 'indigestion', 'headache', 'yellowish_skin', 'dark_urine', 'nausea', 'loss_of_appetite', 'pain_behind_the_eyes', 'back_pain', 'constipation',
-                  'abdominal_pain', 'diarrhoea', 'mild_fever', 'yellow_urine', 'yellowing_of_eyes', 'acute_liver_failure', 'fluid_overload', 'swelling_of_stomach', 'swelled_lymph_nodes', 'malaise', 'blurred_and_distorted_vision', 'phlegm', 'throat_irritation', 'redness_of_eyes', 'sinus_pressure', 'runny_nose', 'congestion', 'chest_pain', 'weakness_in_limbs', 'fast_heart_rate', 'pain_during_bowel_movements', 'pain_in_anal_region', 'bloody_stool', 'irritation_in_anus', 'neck_pain', 'dizziness', 'cramps', 'bruising', 'obesity', 'swollen_legs', 'swollen_blood_vessels', 'puffy_face_and_eyes', 'enlarged_thyroid', 'brittle_nails', 'swollen_extremeties', 'excessive_hunger', 'extra_marital_contacts', 'drying_and_tingling_lips', 'slurred_speech', 'knee_pain', 'hip_joint_pain', 'muscle_weakness', 'stiff_neck', 'swelling_joints', 'movement_stiffness', 'spinning_movements', 'loss_of_balance', 'unsteadiness', 'weakness_of_one_body_side', 'loss_of_smell', 'bladder_discomfort', 'foul_smell_of urine', 'continuous_feel_of_urine', 'passage_of_gases', 'internal_itching', 'toxic_look_(typhos)', 'depression', 'irritability', 'muscle_pain', 'altered_sensorium', 'red_spots_over_body', 'belly_pain', 'abnormal_menstruation', 'dischromic _patches', 'watering_from_eyes', 'increased_appetite', 'polyuria', 'family_history', 'mucoid_sputum', 'rusty_sputum', 'lack_of_concentration', 'visual_disturbances', 'receiving_blood_transfusion', 'receiving_unsterile_injections', 'coma', 'stomach_bleeding', 'distention_of_abdomen', 'history_of_alcohol_consumption', 'fluid_overload.1', 'blood_in_sputum', 'prominent_veins_on_calf', 'palpitations', 'painful_walking', 'pus_filled_pimples', 'blackheads', 'scurring', 'skin_peeling', 'silver_like_dusting', 'small_dents_in_nails', 'inflammatory_nails', 'blister', 'red_sore_around_nose', 'yellow_crust_ooze']
+symptoms_array = ['receiving_blood_transfusion', 'red_sore_around_nose',
+       'abnormal_menstruation', 'continuous_sneezing', 'breathlessness',
+       'blackheads', 'shivering', 'dizziness', 'back_pain', 'unsteadiness',
+       'yellow_crust_ooze', 'muscle_weakness', 'loss_of_balance', 'chills',
+       'ulcers_on_tongue', 'stomach_bleeding', 'lack_of_concentration', 'coma',
+       'neck_pain', 'weakness_of_one_body_side', 'diarrhoea',
+       'receiving_unsterile_injections', 'headache', 'family_history',
+       'fast_heart_rate', 'pain_behind_the_eyes', 'sweating', 'mucoid_sputum',
+       'spotting_ urination', 'sunken_eyes', 'dischromic _patches', 'nausea',
+       'dehydration', 'loss_of_appetite', 'abdominal_pain', 'stomach_pain',
+       'yellowish_skin', 'altered_sensorium', 'chest_pain', 'muscle_wasting',
+       'vomiting', 'mild_fever', 'high_fever', 'red_spots_over_body',
+       'dark_urine', 'itching', 'yellowing_of_eyes', 'fatigue', 'joint_pain',
+       'muscle_pain']
 
 cwd = pathlib.Path(__file__).parent.absolute()
-# print(cwd)
+
 df = pd.read_csv(str(cwd) + '\Training.csv')
-
 df_test = pd.read_csv(str(cwd) + '\Testing.csv')
-a = ""
-for col in df_test.columns:
-    a += "'"+col+"', "
 
-# print(a)
-le = preprocessing.LabelEncoder()
-le.fit(pd.concat([df['prognosis'], df_test['prognosis']]))
+X_train = df[['receiving_blood_transfusion', 'red_sore_around_nose',
+       'abnormal_menstruation', 'continuous_sneezing', 'breathlessness',
+       'blackheads', 'shivering', 'dizziness', 'back_pain', 'unsteadiness',
+       'yellow_crust_ooze', 'muscle_weakness', 'loss_of_balance', 'chills',
+       'ulcers_on_tongue', 'stomach_bleeding', 'lack_of_concentration', 'coma',
+       'neck_pain', 'weakness_of_one_body_side', 'diarrhoea',
+       'receiving_unsterile_injections', 'headache', 'family_history',
+       'fast_heart_rate', 'pain_behind_the_eyes', 'sweating', 'mucoid_sputum',
+       'spotting_ urination', 'sunken_eyes', 'dischromic _patches', 'nausea',
+       'dehydration', 'loss_of_appetite', 'abdominal_pain', 'stomach_pain',
+       'yellowish_skin', 'altered_sensorium', 'chest_pain', 'muscle_wasting',
+       'vomiting', 'mild_fever', 'high_fever', 'red_spots_over_body',
+       'dark_urine', 'itching', 'yellowing_of_eyes', 'fatigue', 'joint_pain',
+       'muscle_pain']]
 
-model = RandomForestClassifier()
-model.fit(df[df.columns.difference(['prognosis'])],
-          le.fit_transform(df['prognosis']))
-y_pred = model.predict(df_test[df_test.columns.difference(['prognosis'])])
+X_test = df_test[['receiving_blood_transfusion', 'red_sore_around_nose',
+       'abnormal_menstruation', 'continuous_sneezing', 'breathlessness',
+       'blackheads', 'shivering', 'dizziness', 'back_pain', 'unsteadiness',
+       'yellow_crust_ooze', 'muscle_weakness', 'loss_of_balance', 'chills',
+       'ulcers_on_tongue', 'stomach_bleeding', 'lack_of_concentration', 'coma',
+       'neck_pain', 'weakness_of_one_body_side', 'diarrhoea',
+       'receiving_unsterile_injections', 'headache', 'family_history',
+       'fast_heart_rate', 'pain_behind_the_eyes', 'sweating', 'mucoid_sputum',
+       'spotting_ urination', 'sunken_eyes', 'dischromic _patches', 'nausea',
+       'dehydration', 'loss_of_appetite', 'abdominal_pain', 'stomach_pain',
+       'yellowish_skin', 'altered_sensorium', 'chest_pain', 'muscle_wasting',
+       'vomiting', 'mild_fever', 'high_fever', 'red_spots_over_body',
+       'dark_urine', 'itching', 'yellowing_of_eyes', 'fatigue', 'joint_pain',
+       'muscle_pain']]
 
-y_true = le.fit_transform(df_test['prognosis'])
+y_train = df.iloc[:,-1]
+y_test = df_test.iloc[:,-1]
+# print(y_test)
 
 
-def get_disease(model, df, le):
-    y_true = model.predict_proba(df)
-    return y_true
+clf2=RandomForestClassifier(n_estimators=100)
+clf2.fit(X_train,y_train)
+y_pred=clf2.predict(X_test)
+# print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
-
-df_copy = df.iloc[0:1, :].copy()
+df_copy = X_train.iloc[0:1,:].copy()
 df_copy.append(pd.Series(), ignore_index=True)
 for c in df_copy.columns:
     df_copy[c] = 0
 
-df_copy = df_copy[df_copy.columns.difference(['prognosis'])]
-# print(get_disease(model, df_copy, le)[0])
-# print(df_copy)
-# print(df_copy)
 
-# print("============================================")
-# print(list(df_test['prognosis']))
+print(df_copy)
 
 
-@csrf_exempt
+
+def get_disease(model, df):
+    y_true = model.predict_proba(df)
+    # print(y_true)
+    return y_true
+
+@csrf_exempt 
 def index(request):
     if request.method == 'POST':
         try:
+            print(request)
             body = json.loads(request.body)
+            print(body)
             symptoms = body['symptoms']
             print(symptoms)
             new_df_copy = copy.deepcopy(df_copy)
             for symptom in symptoms:
-                new_df_copy[symptoms_array[int(symptom)]] = 1
-            da = get_disease(model, new_df_copy, le)[0]
+                    new_df_copy[symptoms_array[int(symptom)]] = 1
+            da = get_disease(clf2, new_df_copy)[0]
             print(da)
             # print(str(da))
             # print(list(da))
             lda = list(da)
+            print(sum(da))
             dic = {
-                'result': lda
+                'result' : lda
             }
             return JsonResponse(dic, safe=False)
         except:
-            return JsonResponse({'error': True}, safe=False)
+            return JsonResponse({'error':True, 'message': "invalid symptoms chosen"}, safe=False)
+        
+
+
+
+
+
+
+
+
+
+
+# , 'muscle_wasting'
+# , 'burning_micturition'
+# , 'lethargy'
+# , 'yellow_crust_ooze'
+# , 'scurring'
+# , 'palpitations'
+# , 'blood_in_sputum'
+# , 'rusty_sputum',
+# family_history
+# polyuria
+# , 'dischromic _patches'
+# , 'toxic_look_(typhos)'
+# extra_marital_contacts
+# swollen_extremeties
+# bloody_stool
+# phlegm
+# malaise
+# swelled_lymph_nodes
+
+# ['receiving_blood_transfusion', 'red_sore_around_nose',
+#        'abnormal_menstruation', 'continuous_sneezing', 'breathlessness',
+#        'blackheads', 'shivering', 'dizziness', 'back_pain', 'unsteadiness',
+#        'yellow_crust_ooze', 'muscle_weakness', 'loss_of_balance', 'chills',
+#        'ulcers_on_tongue', 'stomach_bleeding', 'lack_of_concentration', 'coma',
+#        'neck_pain', 'weakness_of_one_body_side', 'diarrhoea',
+#        'receiving_unsterile_injections', 'headache', 'family_history',
+#        'fast_heart_rate', 'pain_behind_the_eyes', 'sweating', 'mucoid_sputum',
+#        'spotting_ urination', 'sunken_eyes', 'dischromic _patches', 'nausea',
+#        'dehydration', 'loss_of_appetite', 'abdominal_pain', 'stomach_pain',
+#        'yellowish_skin', 'altered_sensorium', 'chest_pain', 'muscle_wasting',
+#        'vomiting', 'mild_fever', 'high_fever', 'red_spots_over_body',
+#        'dark_urine', 'itching', 'yellowing_of_eyes', 'fatigue', 'joint_pain',
+#        'muscle_pain']
