@@ -84,7 +84,7 @@ function sortFunction(a, b) {
 
 router.get("/:id", ensureAuth, async (req, res) => {
   try {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     var objectId = mongoose.Types.ObjectId(req.params.id);
     Result.findById(objectId, async (err, mres) => {
       fin = Array();
@@ -110,7 +110,7 @@ router.get("/:id", ensureAuth, async (req, res) => {
             role: user.role.toUpperCase(),
             email: user.email,
           };
-          console.log(user);
+          // console.log(user);
           boolIsDoctor = false;
           if (req.user.role === "doctor") {
             boolIsDoctor = true;
@@ -129,7 +129,8 @@ router.get("/:id", ensureAuth, async (req, res) => {
           let queryPres = await Prescription.find({ resultId: req.params.id })
             .lean()
             .then(async (prescriptions) => {
-              console.log(req.user.googleId, mres.googleId);
+              // console.log(req.user.googleId, mres.googleId);
+              res.set('page', 'result')
               if (showProfile) {
                 res.render("result", {
                   profile: loggedInProfile,
@@ -138,6 +139,7 @@ router.get("/:id", ensureAuth, async (req, res) => {
                   symptoms: mres.symptoms,
                   createdAt: mres.createdAt,
                   user: pro,
+                  feeling: mres.feeling,
                   pdn: mres.predictionMain[0],
                   pdp: mres.predictionMain[1],
                   prescriptions: prescriptions.reverse(),

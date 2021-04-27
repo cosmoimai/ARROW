@@ -1,4 +1,5 @@
 <div class="main-2">
+  <div class="card active-field">You are viewing Patient's Profile:</div>
     <a href="/user/{{user.googleId}}" class="user">
   <div class="card sticky">
     <div class="image">
@@ -12,12 +13,16 @@
       <div class="name">
         {{user.displayName}}
       </div>
+       <div class="role">
+        {{user.role}}
+      </div>
       <div class="email">
         {{user.email}}
       </div>
     </div>
   </div>
 </a>
+<div class="card active-field">Results:</div>
   {{#each results}}
   <a href="/result/{{this.resultId}}">
     <div class="result-card">

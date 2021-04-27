@@ -44,12 +44,21 @@
 
 <div class="main-1">
 <form action="form" method="post">
-    <select name="symptoms" class="ui fluid search dropdown" multiple="">
+
+    <div class="result-card temp active-field">Form</div>
+    <div class="result-card temp">How are you feeling:</div>
+    <div class="large-textarea card">
+      <textarea cols=5 name="feeling"></textarea>
+    </div>
+
+    <div class="result-card temp">Please choose symptoms:</div>
+    <select name="symptoms" class="slide ui fluid search dropdown" multiple="">
         <option class="temp" value="">Symptoms</option>
         {{#each data}}
         <option value={{@index}}>{{this}}</option>
         {{/each}}
     </select>
+    
     <button  class="result-card" type="submit" class = "btn" value="Submit">Submit </button>
 </form>
 </div>

@@ -46,6 +46,7 @@
 
 <div class="main">
   {{#if showProfile}}
+  <div class="card active-field">You are viewing result of:</div>
   <a href="/user/{{user.googleId}}" class="user">
   <div class="card">
     <div class="image">
@@ -68,6 +69,8 @@
     {{user.email}}
   </div>
 </a>
+{{else}} <div class="card active-field">You are viewing other patient's result</div>
+
 {{/if}}
     {{!-- <div class="result-card">
         <div class="disease-details"> 
@@ -81,14 +84,14 @@
           <span>{{createdAt}}</span>
         </div>
     </div> --}}
-    {{#if doctor}}
-    <form action="/prescription/{{this.resultId}}" method="post">
-      <div class="large-textarea card column">
-      <textarea name="prescription"></textarea>
-      <button class="p-form-card grey">Prescribe</button>
-      </div>
-    </form>
-  {{/if}}
+    <div class="card active-field">Patient was feeling:</div>
+    <div class="prescription-card">
+    <div class="prescription">
+        <textarea readonly>{{feeling}}</textarea>
+    </div>
+    </div>
+    
+  <div class="card active-field">Symptoms: </div>
     {{#each symptoms}}
     <div class="card">
       {{this}}
@@ -99,6 +102,7 @@
 </div>
 
 <div class="main">
+  <div class="card active-field sticky">Diseases</div>
   {{#each diseases}}
     <div class="result-card">
         <div class="disease-details"> 
@@ -114,6 +118,18 @@
 
 {{#if auth}}
 <div class="main">
+  {{#if doctor}}
+    <div class="card active-field">Prescription Form: </div>
+    <form action="/prescription/{{this.resultId}}" method="post">
+       <div class="prescription-card">
+          <div class="prescription">
+              <textarea  name="prescription"></textarea>
+          </div>   
+        <button class="p-form-card grey">Prescribe</button>
+        </div>
+    </form>
+  {{/if}}
+  <div class="card active-field sticky">Prescriptions: </div>
     {{#each prescriptions}}
 
       <div class="prescription-card">

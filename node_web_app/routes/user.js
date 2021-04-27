@@ -27,6 +27,8 @@ router.get("/patient", ensureDoctor, (req, res) => {
           email: req.user.email,
           image: req.user.image,
         }
+        res.set('page', 'user');
+        res.set('role', 'doctor');
         res.render("user", {
           profile: loggedInProfile,
           layout: 'two.hbs',
@@ -64,6 +66,8 @@ router.get("/doctor", ensureAuth, (req, res) => {
           email: req.user.email,
           image: req.user.image,
         }
+        res.set('page', 'user');
+        res.set('role', req.user.role);
         res.render("user", {
           profile: loggedInProfile,
           layout: 'two.hbs',
@@ -130,7 +134,7 @@ router.get("/:gid", ensureAuth, async (req, res) => {
                 };
               }
 
-              console.log(results);
+              // console.log(results);
               
               var loggedInProfile = {
                 googleId: req.user.googleId,
@@ -139,6 +143,8 @@ router.get("/:gid", ensureAuth, async (req, res) => {
                 email: req.user.email,
                 image: req.user.image,
               }
+              res.set('page', 'user');
+              res.set('role', 'patient')
               res.render("userprofile", {
                 layout: 'two.hbs',
                 profile: loggedInProfile,
@@ -181,6 +187,8 @@ router.get("/:gid", ensureAuth, async (req, res) => {
                 email: req.user.email,
                 image: req.user.image,
               }
+              res.set('page', 'user');
+              res.set('role', 'doctor')
               res.render("doctorprofile", {
                 layout: 'two.hbs',
                 profile: loggedInProfile,

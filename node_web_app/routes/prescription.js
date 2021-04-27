@@ -18,17 +18,18 @@ const Prescription = require("../models/Prescription");
 router.post("/:resultId", ensureDoctor, async (req, res) => {
   try {
     let resultId = req.params.resultId;
-    console.log(req.user.googleId);
-    console.log(resultId);
-    console.log(req.body.prescription);
+    // console.log("hello"+resultId)
+    // console.log(req.user.googleId);
+    // console.log(resultId);
+    // console.log(req.body.prescription);
     var objectId = mongoose.Types.ObjectId(resultId);
     Result.findById(objectId, async (err, mres) => {
-      console.log(mres.predictionMain);
+      // console.log(mres.predictionMain);
       predictionMain = mres.predictionMain;
-      console.log(predictionMain);
+      // console.log(predictionMain);
 
-      console.log("hello", predictionMain);
-      await Prescription.create(
+      // console.log("hello", predictionMain);
+      let prescription = await Prescription.create(
         {
           googleId: req.user.googleId,
           resultId: resultId,
@@ -39,15 +40,9 @@ router.post("/:resultId", ensureDoctor, async (req, res) => {
             image: req.user.image,
           },
           predictionMain: predictionMain,
-        },
-        function (err, instance) {
-          if (err) {
-            res.json({ error: error.message });
-            return;
-          }
-          // saved!
         }
       );
+      res.set('prescriptionid', prescription._id)
       res.redirect(`/result/${resultId}`);
     });
   } catch (error) {

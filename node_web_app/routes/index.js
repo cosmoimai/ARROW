@@ -330,6 +330,7 @@ router.post("/form", ensureNotDoctor, async (req, res) => {
               googleId: req.user.googleId,
               symptoms: req.body["symptoms"],
               diseases: resA,
+              feeling: req.body['feeling'],
               predictionMain: [
                 diseases_array[maxind],
                 (resA[maxind] * 100).toFixed(2).toString() + "%",

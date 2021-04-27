@@ -8,6 +8,9 @@ const ResultSchema = new mongoose.Schema({
   symptoms: {
     type: Array,
   },
+  feeling: {
+    type: String,
+  },
   diseases: {
     type: Array,
   },

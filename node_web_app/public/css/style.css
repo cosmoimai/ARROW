@@ -3,7 +3,7 @@ body {
   background-color: #07090F;
   color: #8f9ac0;
   /* font-family: 'Fira Code', monospace; */
-  font-family: 'Fira Code', monospace;
+  font-family: 'Fira Code', monospace !important;
   scrollbar-width: none !important;
   /* scrollbar-height: none; */
   /* font-family: 'Lato', sans-serif; */
@@ -111,7 +111,7 @@ form {
 }
 
 .result-card {
-  margin: 0.6em;
+  margin: 0.4em;
   padding: 0.6em;
   border-radius: 0.5em;
   background-color: #07090F;
@@ -262,15 +262,24 @@ button {
   color: #80cbc4;
 }
 
-.small-email {
-  /* color: #80cbc4; */
+.capital {
+  text-transform: capitalize;
 }
+
+/* .small-email {
+  color: #80cbc4;
+} */
 
 .ui, .item, input, .message{
   background-color: #07090F !important;
   color: #8f9ac0 !important;
   text-decoration: none  !important;
   font-family: 'Fira Code', monospace;
+}
+
+.slide.ui.fluid.search.dropdown.selection.multiple {
+  width: 97%;
+  margin: auto;
 }
 
 
