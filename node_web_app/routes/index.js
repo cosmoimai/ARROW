@@ -373,6 +373,7 @@ router.post("/form", ensureNotDoctor, async (req, res) => {
             pdn: diseases_array[maxind],
             pdp: maxperc,
             showProfile: false,
+            feeling: req.body['feeling'],
             auth: req.isAuthenticated(),
             doctor: req.isAuthenticated() && req.user.role === "doctor",
             patient: req.isAuthenticated() && req.user.role === "patient",

@@ -69,7 +69,7 @@
     {{user.email}}
   </div>
 </a>
-{{else}} <div class="card active-field">You are viewing other patient's result</div>
+{{else}} {{#if auth}} <div class="card active-field">You are viewing other patient's result</div> {{/if}}
 
 {{/if}}
     {{!-- <div class="result-card">

@@ -32,8 +32,8 @@ symptoms_array = ['receiving_blood_transfusion', 'red_sore_around_nose',
 
 cwd = pathlib.Path(__file__).parent.absolute()
 
-df = pd.read_csv(str(cwd) + '\Training.csv')
-df_test = pd.read_csv(str(cwd) + '\Testing.csv')
+df = pd.read_csv(os.path.join(cwd, 'Training.csv'))
+df_test = pd.read_csv(os.path.join(cwd, 'Testing.csv'))
 
 X_train = df[['receiving_blood_transfusion', 'red_sore_around_nose',
        'abnormal_menstruation', 'continuous_sneezing', 'breathlessness',

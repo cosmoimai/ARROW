@@ -60,7 +60,7 @@ form {
   border-radius: 0.3em;
   overflow-y: scroll;
   overflow-x: hidden;
-  scrollbar-width: none i !important;
+  scrollbar-width: none !important;
 }
 
 .side {
@@ -344,6 +344,8 @@ input {
 ::-webkit-scrollbar {
   width: 0.1em !important;
   height: 0.05em !important;
+  /* width: 0em !important;
+  height: 0em !important; */
 }
 
 ::-webkit-scrollbar-track {
